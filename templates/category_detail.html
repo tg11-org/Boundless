@@ -18,7 +18,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+  <h2>{{ category.name }} ({{ server.name }})</h2>
+
+  <h3>Channels:</h3>
+  <ul>
+    {% for channel in channels %}
+      <li>
+        <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
+          {{ channel.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}

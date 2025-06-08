@@ -21,26 +21,46 @@
     <meta charset="UTF-8">
     <title>Boundless</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/themes/dark.css' %}" id="theme-stylesheet">
+    <script>
+        function changeTheme(theme) {
+            document.getElementById('theme-stylesheet').href = '/static/css/themes/' + theme + '.css';
+            const theme = document.cookie.split('; ').find(row => row.startsWith('theme='));
+            if (theme) {
+                const themeName = theme.split('=')[1];
+                document.getElementById('theme-stylesheet').href = '/static/css/themes/' + themeName + '.css';
+            }
+        }
+    </script>
 </head>
 <body>
     <header>
-        <h1>Boundless</h1>
+        <h1>Welcome to Boundless {% if user.is_authenticated %}<span><b>{{ user.username }}</b></span>{% endif %}</h1>
         <nav>
+            
+            <form action="{% url 'home' %}">
+              <button type="submit">Home</button>
+            </form>
+            <form action="{% url 'server_list' %}">
+              <button type="submit">Servers</button>
+            </form>
             {% if user.is_authenticated %}
-                <span>Welcome, <b>{{ user.username }}</b></span>
-                <a href="{% url 'profile' %}">Profile</a>
-                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                <form action="{% url 'profile' %}">
+                    <button type="submit">Profile</button>
+                </form>
+                <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer;">Logout</button>
-                </form>                  
+                    <button type="submit">Logout</button>
+                </form>
             {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'signup' %}">Sign Up</a>
+                <form action="{% url 'login' %}">
+                    <button type="submit">Login</button>
+                </form>
+                <form action="{% url 'signup' %}">
+                    <button type="submit">Sign Up</button>
+                </form>
             {% endif %}
-            <a href="{% url 'home' %}">Home</a>
-            <a href="/admin/">Admin</a>
-        </nav>
-    </header>
+          </nav>
       
 
     <main>

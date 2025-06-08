@@ -18,7 +18,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+  <h2>Create Channel in {{ server.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+  </form>
+  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}

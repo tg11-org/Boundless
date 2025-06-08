@@ -18,7 +18,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+  <h2>Create Server</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+  </form>
 {% endblock %}

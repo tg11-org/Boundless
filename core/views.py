@@ -1,7 +1,288 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Server, Channel, Message, User, FriendRequest, Category
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import redirect
+from .forms import CustomUserCreationForm, ProfileEditForm
+from django.http import HttpResponseForbidden
+import uuid
+from django.core.exceptions import ValidationError, PermissionDenied
+import logging
+from django import forms
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
 
 def home(request):
     return render(request, "home.html")
+
+
+@login_required
+def server_list(request):
+    servers = Server.objects.all()
+    return render(request, "servers.html", {"servers": servers})
+
+
+@login_required
+def server_detail(request, server_id):
+    server = get_object_or_404(Server, id=server_id)
+    # Check if user is a member or if community=True
+    if not server.community and request.user not in server.members.all():
+        return PermissionDenied("You do not have access to this server.")
+    categories = server.categories.prefetch_related("channels").all()
+    user_roles = server.roles.filter(users=request.user)
+    channels = server.channels.filter(allowed_roles__in=user_roles).distinct()
+    user = request.user
+
+    if request.method == "POST" and user in server.members.all():
+        # Use the first channel as default for sending
+        channel = channels.first()
+        Message.objects.create(
+            sender=user, channel=channel, content=request.POST["content"]
+        )
+
+    return render(
+        request,
+        "server_detail.html",
+        {
+            "server": server,
+            "categories": categories,
+            "channels": channels,  # Optional: if you want to show non-categorized channels separately
+        },
+    )
+
+
+@login_required
+def join_server(request, code):
+    server = get_object_or_404(Server, join_code=code)
+    server.members.add(request.user)
+    everyone_role = server.roles.get(name="@everyone")
+    everyone_role.users.add(request.user)
+    return redirect("server_detail", server_id=server.id)
+
+
+@login_required
+def send_friend_request(request, user_id):
+    to_user = get_object_or_404(User, id=user_id)
+    FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
+    return redirect("profile", user_id=to_user.id)
+
+
+@login_required
+def accept_friend_request(request, request_id):
+    friend_request = get_object_or_404(
+        FriendRequest, id=request_id, to_user=request.user
+    )
+    friend_request.status = "accepted"
+    friend_request.save()
+    request.user.friends.add(friend_request.from_user)
+    friend_request.from_user.friends.add(request.user)
+    return redirect("profile", user_id=friend_request.from_user.id)
+
+
+@login_required
+def decline_friend_request(request, request_id):
+    friend_request = get_object_or_404(
+        FriendRequest, id=request_id, to_user=request.user
+    )
+    friend_request.delete()
+    return redirect("profile", user_id=friend_request.from_user.id)
+
+
+@login_required
+def profile(request, **kwargs):
+    user_id = kwargs.get("user_id")
+    if user_id:
+        try:
+            # Validate UUID first!
+            uuid_obj = uuid.UUID(user_id, version=4)
+            user_profile = User.objects.get(id=uuid_obj)
+        except (ValueError, ValidationError, User.DoesNotExist):
+            return render(request, "user_not_found.html", status=404)
+    else:
+        user_profile = request.user
+
+    shared_servers = request.user.shared_servers_with(user_profile)
+    shared_friends = request.user.shared_friends_with(user_profile)
+    friend_requests = FriendRequest.objects.filter(
+        to_user=request.user, status="pending"
+    )
+
+    return render(
+        request,
+        "profile.html",
+        {
+            "user_profile": user_profile,
+            "shared_servers": shared_servers,
+            "shared_friends": shared_friends,
+            "friend_requests": friend_requests,
+        },
+    )
+
+
+@login_required
+def edit_profile(request):
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+    else:
+        form = ProfileEditForm(instance=request.user)
+    return render(request, "edit_profile.html", {"form": form})
+
+
+def signup(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.first_name = form.cleaned_data.get("first_name")
+            user.last_name = form.cleaned_data.get("last_name")
+            user.email = form.cleaned_data.get("email")
+            user.display_name = form.cleaned_data.get("display_name")
+            user.bio = form.cleaned_data.get("bio")
+            if form.cleaned_data.get("avatar"):
+                user.avatar = form.cleaned_data.get("avatar")
+            user.save()
+
+            from django.contrib.auth import login
+
+            login(request, user)
+            return redirect("home")
+    else:
+        form = CustomUserCreationForm()
+    return render(request, "signup.html", {"form": form})
+
+
+def theme_preview(request):
+    themes = ["dark", "light", "orange", "synth"]
+    return render(request, "themes/preview.html", {"themes": themes})
+
+
+class ServerCreationForm(forms.ModelForm):
+    class Meta:
+        model = Server
+        fields = ["name", "description", "icon"]
+
+
+@login_required
+def create_server(request):
+    if request.method == "POST":
+        form = ServerCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            server = form.save(commit=False)
+            server.owner = request.user
+            server.save()
+            server.members.add(request.user)  # Add owner as first member
+
+            # Create default category
+            uncategorized = Category.objects.create(server=server, name="Uncategorized")
+
+            # Create default "general" channel
+            Channel.objects.create(
+                server=server,
+                name="general",
+                channel_type="text",
+                category=uncategorized,
+            )
+
+            return redirect("server_detail", server_id=server.id)
+    else:
+        form = ServerCreationForm()
+    return render(request, "create_server.html", {"form": form})
+
+
+class CategoryCreationForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ["name"]
+
+
+@login_required
+def create_category(request, server_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    if request.method == "POST":
+        form = CategoryCreationForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.server = server
+            category.save()
+            return redirect("server_detail", server_id=server.id)
+    else:
+        form = CategoryCreationForm()
+    return render(request, "create_category.html", {"form": form, "server": server})
+
+
+class ChannelCreationForm(forms.ModelForm):
+    class Meta:
+        model = Channel
+        fields = ["name", "channel_type", "category"]
+
+
+@login_required
+def create_channel(request, server_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    if request.method == "POST":
+        form = ChannelCreationForm(request.POST)
+        if form.is_valid():
+            channel = form.save(commit=False)
+            channel.server = server
+            channel.save()
+            return redirect("server_detail", server_id=server.id)
+    else:
+        form = ChannelCreationForm()
+        form.fields["category"].queryset = server.categories.all()
+    return render(request, "create_channel.html", {"form": form, "server": server})
+
+
+@login_required
+def channel_detail(request, server_id, category_id, channel_id):
+    server = get_object_or_404(Server, id=server_id)
+    category = get_object_or_404(Category, id=category_id, server=server)
+    channel = get_object_or_404(
+        Channel, id=channel_id, server=server, category=category
+    )
+
+    if request.method == "POST" and request.user in server.members.all():
+        Message.objects.create(
+            sender=request.user, channel=channel, content=request.POST["content"]
+        )
+        return redirect(
+            "channel_detail",
+            server_id=server.id,
+            category_id=category.id,
+            channel_id=channel.id,
+        )
+
+    messages = channel.messages.order_by("created_at")
+    return render(
+        request,
+        "channel_detail.html",
+        {
+            "server": server,
+            "category": category,
+            "channel": channel,
+            "messages": messages,
+        },
+    )
+
+
+@login_required
+def category_detail(request, server_id, category_id):
+    server = get_object_or_404(Server, id=server_id)
+    category = get_object_or_404(Category, id=category_id, server=server)
+
+    # Optional: show only channels the user can access
+    channels = category.channels.all()
+
+    return render(
+        request,
+        "category_detail.html",
+        {
+            "server": server,
+            "category": category,
+            "channels": channels,
+        },
+    )

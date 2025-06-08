@@ -13,4 +13,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-default_app_config = "core.apps.CoreConfig"
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Server, Role
+
+
+@receiver(post_save, sender=Server)
+def create_default_role(sender, instance, created, **kwargs):
+    if created:
+        Role.objects.create(server=instance, name="@everyone")

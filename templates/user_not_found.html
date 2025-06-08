@@ -18,7 +18,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+  <h1>User not found.</h1>
+  <p>The user ID provided is not valid or the user does not exist.</p>
+  <a href="{% url 'home' %}">Return home</a>
 {% endblock %}

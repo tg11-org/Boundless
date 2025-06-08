@@ -18,23 +18,57 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>My Profile</h2>
+{% if user.id == user_profile.id %}
+  <h2>My Profile</h2>
+{% else %}
+  <h2>{{ user_profile.username }}'s Profile</h2>
+{% endif %}
 <ul>
-  <li><strong>Username:</strong> {{ user.username }}</li>
-  <li><strong>Display Name:</strong> {{ user.display_name }}</li>
-  <li><strong>First Name:</strong> {{ user.first_name }}</li>
-  <li><strong>Last Name:</strong> {{ user.last_name }}</li>
-  <li><strong>Email:</strong> {{ user.email }}</li>
-  <li><strong>Bio:</strong> {{ user.bio }}</li>
-  <li>
-    <strong>Avatar:</strong><br>
-    {% if user.avatar %}
-      <img src="{{ user.avatar.url }}" alt="Avatar" style="max-width: 200px;">
-    {% else %}
-      No avatar uploaded.
-    {% endif %}
-  </li>
+  <li><strong>Username:</strong> {{ user_profile.username }}</li>
+  <li><strong>Display Name:</strong> {{ user_profile.display_name }}</li>
+  <li><strong>UUID:</strong> {{ user_profile.id }}</li>
+  {% if user_profile.show_legal_name %}
+    <li><strong>First Name:</strong> {{ user_profile.first_name }}</li>
+    <li><strong>Last Name:</strong> {{ user_profile.last_name }}</li>
+  {% endif %}
+  {% if user_profile.show_email %}
+    <li><strong>Email:</strong> {{ user_profile.email }}</li>
+  {% endif %}
+  {% if user_profile.show_phone_number %}
+    <li><strong>Phone Number:</strong> {{ user_profile.phone_number }}</li>
+  {% endif %}
+  {% if user_profile.show_bio %}
+    <li><strong>Bio:</strong> {{ user_profile.bio }}</li>
+  {% endif %}
+  {% if user_profile.show_avatar %}
+    <li>
+      <strong>Avatar:</strong><br>
+      {% if user.avatar %}
+        <img src="{{ user_profile.avatar.url }}" alt="Avatar" style="max-width: 200px;">
+      {% else %}
+        No avatar uploaded.
+      {% endif %}
+    </li>
+  {% endif %}
 </ul>
+{% if user.id != user_profile.id %}
+  <h3>Shared Servers:</h3>
+  <ul>
+    {% for server in shared_servers %}
+      <li>{{ server.name }}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Shared Friends:</h3>
+  <ul>
+    {% for friend in shared_friends %}
+      <li>{{ friend.username }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% if user.id == user_profile.id %}
+  <a href="{% url 'edit_profile' %}">Edit Profile</a>
+{% endif %}
 
 <a href="{% url 'home' %}">Back to Home</a>
 {% endblock %}

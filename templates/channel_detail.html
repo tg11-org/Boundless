@@ -18,7 +18,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+  <h2>{{ server.name }} - {{ category.name }} - {{ channel.name }}</h2>
+
+  <ul>
+    {% for message in messages %}
+      <li><strong>{{ message.sender.username }}</strong>: {{ message.content }}</li>
+    {% endfor %}
+  </ul>
+
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="Type your message...">
+    <button type="submit">Send</button>
+  </form>
+
+  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}
