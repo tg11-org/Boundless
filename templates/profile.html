@@ -1,0 +1,40 @@
+<!--
+ Copyright (C) 2025 TG11
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+ 
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Profile</h2>
+<ul>
+  <li><strong>Username:</strong> {{ user.username }}</li>
+  <li><strong>Display Name:</strong> {{ user.display_name }}</li>
+  <li><strong>First Name:</strong> {{ user.first_name }}</li>
+  <li><strong>Last Name:</strong> {{ user.last_name }}</li>
+  <li><strong>Email:</strong> {{ user.email }}</li>
+  <li><strong>Bio:</strong> {{ user.bio }}</li>
+  <li>
+    <strong>Avatar:</strong><br>
+    {% if user.avatar %}
+      <img src="{{ user.avatar.url }}" alt="Avatar" style="max-width: 200px;">
+    {% else %}
+      No avatar uploaded.
+    {% endif %}
+  </li>
+</ul>
+
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}
