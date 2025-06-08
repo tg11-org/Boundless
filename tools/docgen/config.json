@@ -1,0 +1,15 @@
+{
+    "ignore": [
+        "__pycache__",
+        ".git",
+        "docs/*",
+        "scripts/*",
+        "static/*",
+        "templates/*",
+        "tests/*",
+        "venv/*",
+        "logs/*"
+    ],
+    "scan_dir": "U:/Programs/Boundless/",
+    "output_dir": "U:/Programs/Boundless/docs/api"
+}
