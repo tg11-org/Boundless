@@ -30,6 +30,18 @@
         >{{ cat.name }}</option>
       {% endfor %}
     </select><br>
+    <label>Type:</label>
+    <select name="channel_type" required>
+        <option value="text">Text</option>
+        <option value="voice">Voice</option>
+        <option value="video">Video</option>
+        <option value="media">Media</option>
+        <option value="forum">Forum</option>
+        <option value="announcement">Announcement</option>
+        <option value="event">Event</option>
+        <option value="support">Support</option>
+        <option value="ticket">Ticket</option>
+    </select><br>
     <button type="submit">Create Channel</button>
   </form>
   <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
