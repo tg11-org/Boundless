@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- body {
+body {
     font-family: Arial, sans-serif;
     background: #121212;
     color: #ddd;
@@ -37,4 +37,25 @@ nav a {
 
 main {
     padding: 20px;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    background: #1e1e1e;
+    padding: 10px;
+}
+
+nav form button {
+    background: #333;
+    color: #ddd;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+nav form button:hover {
+    background: #555;
 }
