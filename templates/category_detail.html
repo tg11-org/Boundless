@@ -26,7 +26,7 @@
     {% for channel in channels %}
       <li>
         <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
-          {{ channel.name }}
+          {{ channel.name }} ( channel.channel_type )
         </a>
       </li>
     {% endfor %}

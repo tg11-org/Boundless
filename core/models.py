@@ -110,11 +110,23 @@ class Channel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     TEXT = 'text'
     VOICE = 'voice'
+    VIDEO = 'video'
+    MEDIA = 'media'
     FORUM = 'forum'
+    ANNOUNCEMENT = 'announcement'
+    EVENT = 'event'
+    SUPPORT = 'support'
+    TICKET = 'ticket'
     TYPE_CHOICES = [
-        (TEXT, 'Text'),
-        (VOICE, 'Voice'),
-        (FORUM, 'Forum'),
+        (TEXT, "Text"),
+        (VOICE, "Voice"),
+        (VIDEO, "Video"),
+        (MEDIA, "Media"),
+        (FORUM, "Forum"),
+        (ANNOUNCEMENT, "Announcement"),
+        (EVENT, "Event"),
+        (SUPPORT, "Support"),
+        (TICKET, "Ticket"),
     ]
     server = models.ForeignKey(
         Server, on_delete=models.CASCADE, related_name="channels"
