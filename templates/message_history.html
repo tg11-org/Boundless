@@ -1,0 +1,34 @@
+<!--
+ Copyright (C) 2025 TG11
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+ 
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Edit History for Message by {{ message.sender.username }}</h2>
+  <ul>
+    {% for edit in history %}
+      <li>
+        <strong>Editor:</strong> {{ edit.editor }}<br>
+        <strong>Old Content:</strong> {{ edit.old_content }}<br>
+        <strong>Edited At:</strong> {{ edit.edited_at }}
+      </li>
+    {% empty %}
+      <li>No edits for this message.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Back to Channel</a>
+{% endblock %}

@@ -18,19 +18,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>{{ server.name }} - {{ category.name }} - {{ channel.name }}</h2>
+  <h2>
+    <a href="{% url 'server_detail' server_id=server.id %}"><b>{{ server.name }}</b></a> -
+    <a href="{% url 'category_detail' server_id=server.id category_id=category.id %}"><b>{{ category.name }}</b></a> -
+    {{ channel.name }}
+  </h2>
 
-  <ul>
+  <ul id="messages">
     {% for message in messages %}
-      <li><strong>{{ message.sender.username }}</strong>: {{ message.content }}</li>
+      <li>
+        <strong>{{ message.sender.username }}</strong>: {{ message.content }}
+        {% if message.sender == user %}
+          <a href="{% url 'edit_message' message_id=message.id %}">[Edit]</a>
+          <a href="{% url 'delete_message' message_id=message.id %}">[Delete]</a>
+        {% endif %}
+        {% if message.deleted %}
+          <span style="color: {{ theme.deleted_color }};">(Deleted)</span>
+        {% endif %}
+      </li>
     {% endfor %}
   </ul>
 
-  <form method="post">
+  <form id="message-form" method="post">
     {% csrf_token %}
     <input type="text" name="content" placeholder="Type your message...">
     <button type="submit">Send</button>
   </form>
 
-  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <!-- Add the WebSocket script here -->
+  <script>
+    const chatSocket = new WebSocket(
+      'ws://' + window.location.host +
+      '/ws/servers/{{ server.id }}/{{ category.id }}/{{ channel.id }}/'
+    );
+
+    chatSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      const messagesDiv = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
+      messagesDiv.appendChild(li);
+    };
+
+    chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+    };
+
+    document.getElementById('message-form').onsubmit = function(e) {
+      e.preventDefault();
+      const messageInputDom = document.querySelector('input[name="content"]');
+      const message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+        'message': message
+      }));
+      messageInputDom.value = '';
+    };
+  </script>
 {% endblock %}

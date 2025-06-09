@@ -142,9 +142,26 @@ class Message(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(blank=True, null=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f"Message from {self.sender} in {self.channel}"
+
+
+class MessageEditHistory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    message = models.ForeignKey(
+        Message, on_delete=models.CASCADE, related_name="edit_history"
+    )
+    editor = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True
+    )  # Who edited it
+    old_content = models.TextField()
+    edited_at = models.DateTimeField(auto_now_add=True)  # When this edit happened
+
+    def __str__(self):
+        return f"MessageEditHistory from {self.sender} in {self.channel} by {self.editor} to {self.old_content}"
 
 
 class GroupChat(models.Model):

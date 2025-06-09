@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Server, Channel, Message, User, FriendRequest, Category
+from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, ProfileEditForm
@@ -9,6 +9,7 @@ import uuid
 from django.core.exceptions import ValidationError, PermissionDenied
 import logging
 from django import forms
+from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 # Create your views here.
@@ -20,8 +21,15 @@ def home(request):
 
 @login_required
 def server_list(request):
-    servers = Server.objects.all()
+    # servers = Server.objects.all()
+    servers = request.user.servers.all()  # Only servers the user is a member of
     return render(request, "servers.html", {"servers": servers})
+
+
+@login_required
+def discover_community_servers(request):
+    servers = Server.objects.filter(community=True).exclude(members=request.user)
+    return render(request, "discover_community.html", {"servers": servers})
 
 
 @login_required
@@ -265,6 +273,7 @@ def channel_detail(request, server_id, category_id, channel_id):
             "category": category,
             "channel": channel,
             "messages": messages,
+            "user": request.user,
         },
     )
 
@@ -285,4 +294,71 @@ def category_detail(request, server_id, category_id):
             "category": category,
             "channels": channels,
         },
+    )
+
+
+@login_required
+def edit_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id, sender=request.user)
+
+    if request.method == "POST":
+        new_content = request.POST.get("content")
+
+        # Save edit history
+        MessageEditHistory.objects.create(
+            message=message, editor=request.user, old_content=message.content
+        )
+
+        # Update the message
+        message.content = new_content
+        message.edited_at = timezone.now()
+        message.save()
+
+        return redirect(
+            "channel_detail",
+            server_id=message.channel.server.id,
+            category_id=message.channel.category.id,
+            channel_id=message.channel.id,
+        )
+
+    return render(request, "edit_message.html", {"message": message})
+
+
+@login_required
+def message_history(request, server_id, category_id, channel_id, message_id):
+    server = get_object_or_404(Server, id=server_id)
+    category = get_object_or_404(Category, id=category_id, server=server)
+    channel = get_object_or_404(
+        Channel, id=channel_id, server=server, category=category
+    )
+    message = get_object_or_404(Message, id=message_id, channel=channel)
+
+    history = message.edit_history.all().order_by("-edited_at")
+
+    return render(
+        request,
+        "message_history.html",
+        {
+            "server": server,
+            "category": category,
+            "channel": channel,
+            "message": message,
+            "history": history,
+        },
+    )
+
+
+@login_required
+def delete_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id, sender=request.user)
+
+    # Soft delete: mark as deleted, keep in DB
+    message.deleted = True
+    message.save()
+
+    return redirect(
+        "channel_detail",
+        server_id=message.channel.server.id,
+        category_id=message.channel.category.id,
+        channel_id=message.channel.id,
     )
