@@ -88,6 +88,9 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     protected = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.name} (in {self.server.name})"
+
 
 # === Role Model ===
 class Role(models.Model):

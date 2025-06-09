@@ -232,23 +232,23 @@ class ChannelCreationForm(forms.ModelForm):
 @login_required
 def create_channel(request, server_id, category_id=None):
     server = get_object_or_404(Server, id=server_id, owner=request.user)
-    if request.method == "POST":
-        form = ChannelCreationForm(request.POST)
-        if form.is_valid():
-            channel = form.save(commit=False)
-            channel.server = server
-            channel.save()
-            return redirect("server_detail", server_id=server.id)
-    else:
-        form = ChannelCreationForm()
-        # Filter to only categories of this server
-        form.fields["category"].queryset = server.categories.all()
 
-        # If category_id provided, set it as initial
-        if category_id:
-            category = get_object_or_404(Category, id=category_id, server=server)
-            form.fields["category"].initial = category
-    return render(request, "create_channel.html", {"form": form, "server": server, "category_id": category_id})
+    if request.method == "POST":
+        # Use manual fields instead of the Django form
+        name = request.POST.get("name")
+        category_id = request.POST.get("category_id")
+        category = Category.objects.filter(id=category_id, server=server).first()
+
+        Channel.objects.create(
+            name=name,
+            server=server,
+            category=category,  # might be None if no category chosen
+        )
+        return redirect("server_detail", server_id=server.id)
+
+    # Load categories for dropdown
+    categories = server.categories.all()
+    return render(request, "create_channel.html", {"server": server, "categories": categories, "selected_category": category_id})
 
 
 @login_required
