@@ -86,6 +86,7 @@ class Category(models.Model):
         Server, on_delete=models.CASCADE, related_name="categories"
     )
     name = models.CharField(max_length=100)
+    protected = models.BooleanField(default=False)
 
 
 # === Role Model ===

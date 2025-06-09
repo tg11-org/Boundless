@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory
+from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory, Role
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, ProfileEditForm
@@ -186,7 +186,7 @@ def create_server(request):
             server.members.add(request.user)  # Add owner as first member
 
             # Create default category
-            uncategorized = Category.objects.create(server=server, name="Uncategorized")
+            uncategorized = Category.objects.create(server=server, name="Uncategorized", protected=True)
 
             # Create default "general" channel
             Channel.objects.create(
@@ -230,7 +230,7 @@ class ChannelCreationForm(forms.ModelForm):
 
 
 @login_required
-def create_channel(request, server_id):
+def create_channel(request, server_id, category_id=None):
     server = get_object_or_404(Server, id=server_id, owner=request.user)
     if request.method == "POST":
         form = ChannelCreationForm(request.POST)
@@ -241,8 +241,14 @@ def create_channel(request, server_id):
             return redirect("server_detail", server_id=server.id)
     else:
         form = ChannelCreationForm()
+        # Filter to only categories of this server
         form.fields["category"].queryset = server.categories.all()
-    return render(request, "create_channel.html", {"form": form, "server": server})
+
+        # If category_id provided, set it as initial
+        if category_id:
+            category = get_object_or_404(Category, id=category_id, server=server)
+            form.fields["category"].initial = category
+    return render(request, "create_channel.html", {"form": form, "server": server, "category_id": category_id})
 
 
 @login_required
@@ -298,7 +304,7 @@ def category_detail(request, server_id, category_id):
 
 
 @login_required
-def edit_message(request, message_id):
+def edit_message(request, server_id, category_id, channel_id, message_id):
     message = get_object_or_404(Message, id=message_id, sender=request.user)
 
     if request.method == "POST":
@@ -361,4 +367,85 @@ def delete_message(request, message_id):
         server_id=message.channel.server.id,
         category_id=message.channel.category.id,
         channel_id=message.channel.id,
+    )
+
+
+@login_required
+def roles_list(request, server_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    roles = server.roles.all()
+    return render(request, "roles_list.html", {"server": server, "roles": roles})
+
+
+@login_required
+def delete_category(request, server_id, category_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    category = get_object_or_404(Category, id=category_id, server=server)
+
+    if category.protected:
+        return HttpResponseForbidden("This category cannot be deleted.")
+
+    category.delete()
+    return redirect("server_detail", server_id=server.id)
+
+
+class RoleForm(forms.ModelForm):
+    class Meta:
+        model = Role
+        fields = ["name", "color"]  # Add other fields as needed
+
+
+@login_required
+def create_role(request, server_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+
+    if request.method == "POST":
+        form = RoleForm(request.POST)
+        if form.is_valid():
+            role = form.save(commit=False)
+            role.server = server
+            role.save()
+            return redirect("roles_list", server_id=server.id)
+    else:
+        form = RoleForm()
+
+    return render(request, "create_role.html", {"form": form, "server": server})
+
+
+@login_required
+def edit_role(request, server_id, role_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    role = get_object_or_404(Role, id=role_id, server=server)
+
+    if request.method == "POST":
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            form.save()
+            return redirect("roles_list", server_id=server.id)
+    else:
+        form = RoleForm(instance=role)
+
+    return render(
+        request, "edit_role.html", {"form": form, "role": role, "server": server}
+    )
+
+
+@login_required
+def assign_role(request, server_id, role_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+    role = get_object_or_404(Role, id=role_id, server=server)
+    members = server.members.all()
+
+    if request.method == "POST":
+        user_id = request.POST.get("user_id")
+        user = get_object_or_404(User, id=user_id)
+
+        # Example: assume you have a ManyToMany on User or a through table
+        user.roles.add(role)  # If you have a ManyToManyField
+        return redirect("roles_list", server_id=server.id)
+
+    return render(
+        request,
+        "assign_role.html",
+        {"server": server, "role": role, "members": members},
     )

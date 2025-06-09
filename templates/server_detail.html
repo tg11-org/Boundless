@@ -19,6 +19,8 @@
 {% block content %}
 <h2>{{ server.name }}</h2>
 <p>{{ server.description }}</p>
+<a href="{% url 'create_category' server_id=server.id %}"><button>Create Category</button></a>
+
 
 {% for category in categories %}
   <h3>

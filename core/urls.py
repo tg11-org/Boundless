@@ -15,6 +15,8 @@
 
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 import logging
 logger = logging.getLogger(__name__)
@@ -29,12 +31,15 @@ urlpatterns = [
     path('servers/<uuid:server_id>/roles/create/', views.create_role, name='create_role'),
     path('servers/<uuid:server_id>/roles/<uuid:role_id>/edit/', views.edit_role, name='edit_role'),
     path('servers/<uuid:server_id>/roles/<uuid:role_id>/assign/', views.assign_role, name='assign_role'),
+    path('servers/<uuid:server_id>/create_channel/', views.create_channel, name='create_channel'),
     path('servers/<uuid:server_id>/create_category/', views.create_category, name='create_category'),
-    path("servers/<uuid:server_id>/<uuid:category_id>/",views.category_detail,name="category_detail",),
+    path("servers/<uuid:server_id>/<uuid:category_id>/", views.category_detail, name="category_detail",),
     path('servers/<uuid:server_id>/<uuid:category_id>/create_channel/', views.create_channel, name='create_channel'),
-    path("servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/",views.channel_detail,name="channel_detail",),
-    path('servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/<uuid:message_id>/history/',views.message_history,name='message_history',),
+    path("servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/", views.channel_detail,name="channel_detail",),
+    path("servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/<uuid:message_id>/edit/", views.edit_message, name="edit_message"),
+    path("servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/<uuid:message_id>/delete/", views.delete_message, name="delete_message"),
+    path('servers/<uuid:server_id>/<uuid:category_id>/<uuid:channel_id>/<uuid:message_id>/history/', views.message_history, name='message_history',),
     path("profile/", views.profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     path("profile/<str:user_id>/", views.profile, name="profile"),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

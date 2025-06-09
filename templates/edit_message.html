@@ -24,6 +24,5 @@
     <textarea name="content">{{ message.content }}</textarea>
     <button type="submit">Save Changes</button>
   </form>
-  <a href="{% url 'channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Cancel</a>
-  <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">Back to Channel</a>
+  <a href="{% url 'channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Cancel / Back</a>
 {% endblock %}

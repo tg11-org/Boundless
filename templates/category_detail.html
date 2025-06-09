@@ -19,6 +19,7 @@
 
 {% block content %}
   <h2>{{ category.name }} ({{ server.name }})</h2>
+  <a href="{% url 'create_channel' server_id=server.id category_id=category.id %}"><button>Create Channel</button></a>
 
   <h3>Channels:</h3>
   <ul>
@@ -32,4 +33,5 @@
   </ul>
 
   <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <a href="{% url 'category_detail' server_id=server.id category_id=category.id %}">Back to Category</b></a>
 {% endblock %}

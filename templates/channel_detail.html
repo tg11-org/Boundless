@@ -29,8 +29,8 @@
       <li>
         <strong>{{ message.sender.username }}</strong>: {{ message.content }}
         {% if message.sender == user %}
-          <a href="{% url 'edit_message' message_id=message.id %}">[Edit]</a>
-          <a href="{% url 'delete_message' message_id=message.id %}">[Delete]</a>
+          <a href="{% url 'edit_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}">[Edit]</a>
+          <a href="{% url 'delete_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}">[Delete]</a>
         {% endif %}
         {% if message.deleted %}
           <span style="color: {{ theme.deleted_color }};">(Deleted)</span>

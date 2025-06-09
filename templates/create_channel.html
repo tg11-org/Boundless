@@ -18,11 +18,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Create Channel in {{ server.name }}</h2>
+  <h2>Create Channel</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
+    <label>Name:</label><input type="text" name="name" required><br>
+    <label>Category:</label>
+    <select name="category_id">
+      {% for cat in categories %}
+        <option value="{{ cat.id }}"
+        {% if cat.id|stringformat:"s" == selected_category|stringformat:"s" %}selected{% endif %}
+        >{{ cat.name }}</option>
+      {% endfor %}
+    </select><br>
+    <button type="submit">Create Channel</button>
   </form>
   <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}
+
