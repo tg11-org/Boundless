@@ -237,12 +237,14 @@ def create_channel(request, server_id, category_id=None):
         # Use manual fields instead of the Django form
         name = request.POST.get("name")
         category_id = request.POST.get("category_id")
+        channel_type = request.POST.get("channel_type")
         category = Category.objects.filter(id=category_id, server=server).first()
 
         Channel.objects.create(
             name=name,
             server=server,
             category=category,  # might be None if no category chosen
+            channel_type=channel_type,
         )
         return redirect("server_detail", server_id=server.id)
 
