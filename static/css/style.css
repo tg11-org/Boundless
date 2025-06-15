@@ -59,3 +59,11 @@ nav form button {
 nav form button:hover {
     background: #555;
 }
+
+.server-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%; /* optional for circle */
+    margin-bottom: 1rem;
+}

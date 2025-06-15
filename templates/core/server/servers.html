@@ -17,7 +17,7 @@
 
 {% extends 'base.html' %}
 {% block content %}
-<a href="{% url 'core:create_server' %}"><button>Create Server</button></a>
+<a href="{% url 'core:create_server' %}"><button>Create Server</button></a> <a href="{% url 'core:discover_community' %}"><button>Community (Public) Servers</button></a>
 <h2>Servers List</h2>
 <ul>
   {% for server in servers %}

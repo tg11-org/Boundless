@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory, Role
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, ProfileEditForm, ServerSettingsForm
 from django.http import HttpResponseForbidden
 import uuid
@@ -67,14 +66,14 @@ def join_server(request, code):
     server.members.add(request.user)
     everyone_role = server.roles.get(name="@everyone")
     everyone_role.users.add(request.user)
-    return redirect("server_detail", server_id=server.id)
+    return redirect("core:server_detail", server_id=server.id)
 
 
 @login_required
 def send_friend_request(request, user_id):
     to_user = get_object_or_404(User, id=user_id)
     FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
-    return redirect("profile", user_id=to_user.id)
+    return redirect("core:profile", user_id=to_user.id)
 
 
 @login_required
@@ -86,7 +85,7 @@ def accept_friend_request(request, request_id):
     friend_request.save()
     request.user.friends.add(friend_request.from_user)
     friend_request.from_user.friends.add(request.user)
-    return redirect("profile", user_id=friend_request.from_user.id)
+    return redirect("core:profile", user_id=friend_request.from_user.id)
 
 
 @login_required
@@ -95,7 +94,7 @@ def decline_friend_request(request, request_id):
         FriendRequest, id=request_id, to_user=request.user
     )
     friend_request.delete()
-    return redirect("profile", user_id=friend_request.from_user.id)
+    return redirect("core:profile", user_id=friend_request.from_user.id)
 
 
 @login_required
@@ -135,7 +134,7 @@ def edit_profile(request):
         form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("profile")
+            return redirect("core:profile")
     else:
         form = ProfileEditForm(instance=request.user)
     return render(request, "core/profile/edit_profile.html", {"form": form})
@@ -198,7 +197,7 @@ def create_server(request):
                 category=uncategorized,
             )
 
-            return redirect("server_detail", server_id=server.id)
+            return redirect("core:server_detail", server_id=server.id)
     else:
         form = ServerCreationForm()
     return render(request, "core/server/create_server.html", {"form": form})
@@ -219,7 +218,7 @@ def create_category(request, server_id):
             category = form.save(commit=False)
             category.server = server
             category.save()
-            return redirect("server_detail", server_id=server.id)
+            return redirect("core:server_detail", server_id=server.id)
     else:
         form = CategoryCreationForm()
     return render(request, "core/server/category/create_category.html", {"form": form, "server": server})
@@ -248,7 +247,7 @@ def create_channel(request, server_id, category_id=None):
             category=category,  # might be None if no category chosen
             channel_type=channel_type,
         )
-        return redirect("server_detail", server_id=server.id)
+        return redirect("core:server_detail", server_id=server.id)
 
     # Load categories for dropdown
     categories = server.categories.all()
@@ -390,7 +389,7 @@ def delete_category(request, server_id, category_id):
         return HttpResponseForbidden("This category cannot be deleted.")
 
     category.delete()
-    return redirect("server_detail", server_id=server.id)
+    return redirect("core:server_detail", server_id=server.id)
 
 
 class RoleForm(forms.ModelForm):
@@ -409,7 +408,7 @@ def create_role(request, server_id):
             role = form.save(commit=False)
             role.server = server
             role.save()
-            return redirect("roles_list", server_id=server.id)
+            return redirect("core:roles_list", server_id=server.id)
     else:
         form = RoleForm()
 
@@ -425,7 +424,7 @@ def edit_role(request, server_id, role_id):
         form = RoleForm(request.POST, instance=role)
         if form.is_valid():
             form.save()
-            return redirect("roles_list", server_id=server.id)
+            return redirect("core:roles_list", server_id=server.id)
     else:
         form = RoleForm(instance=role)
 
@@ -446,7 +445,7 @@ def assign_role(request, server_id, role_id):
 
         # Example: assume you have a ManyToMany on User or a through table
         user.roles.add(role)  # If you have a ManyToManyField
-        return redirect("roles_list", server_id=server.id)
+        return redirect("core:roles_list", server_id=server.id)
 
     return render(
         request,
@@ -475,7 +474,7 @@ def server_settings(request, server_id):
         form = ServerSettingsForm(request.POST, instance=server)
         if form.is_valid():
             form.save()
-            return redirect("server_detail", server_id=server.id)
+            return redirect("core:server_detail", server_id=server.id)
     else:
         form = ServerSettingsForm(instance=server)
 
