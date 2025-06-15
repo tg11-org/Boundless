@@ -15,11 +15,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>{{ server.name }}</h2>
 <p>{{ server.description }}</p>
-<a href="{% url 'create_category' server_id=server.id %}"><button>Create Category</button></a>
+<a href="{% url 'core:create_category' server_id=server.id %}"><button>Create Category</button></a>
 
 
 <div class="sidebar">
@@ -31,7 +31,7 @@
       <ul>
         {% for channel in category.channels.all %}
           <li>
-            <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
+            <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
               {{ channel.name }}
             </a>
           </li>
@@ -44,7 +44,7 @@
 
 
 
-<a href="{% url 'server_list' %}">Back to Servers</a>
+<a href="{% url 'core:server_list' %}">Back to Servers</a>
 {% endblock %}
 
 {% if user in server.members.all %}

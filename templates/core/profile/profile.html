@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 {% if user.id == user_profile.id %}
@@ -67,13 +67,13 @@
   </ul>
 {% endif %}
 {% if user != user_profile and not user_profile in user.friends.all %}
-  <form action="{% url 'send_friend_request' user_id=user_profile.id %}" method="post">
+  <form action="{% url 'core:send_friend_request' user_id=user_profile.id %}" method="post">
     {% csrf_token %}
     <button type="submit">Send Friend Request</button>
   </form>
 {% endif %}
 {% if user.id == user_profile.id %}
-  <a href="{% url 'edit_profile' %}">Edit Profile</a>
+  <a href="{% url 'core:edit_profile' %}">Edit Profile</a>
 {% endif %}
 
 <a href="{% url 'home' %}">Back to Home</a>

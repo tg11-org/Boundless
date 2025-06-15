@@ -16,6 +16,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from .models import Server
 
 User = get_user_model()
 
@@ -60,3 +61,9 @@ class ProfileEditForm(forms.ModelForm):
             "show_bio",
             "show_avatar",
         ]
+
+
+class ServerSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Server
+        fields = ["name", "description", "community", "icon"]

@@ -15,14 +15,14 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
-<a href="{% url 'create_server' %}"><button>Create Server</button></a>
+<a href="{% url 'core:create_server' %}"><button>Create Server</button></a>
 <h2>Servers List</h2>
 <ul>
   {% for server in servers %}
     <li>
-      <a href="{% url 'server_detail' server.id %}">{{ server.name }}</a>
+      <a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</a>
     </li>
   {% endfor %}
 </ul>

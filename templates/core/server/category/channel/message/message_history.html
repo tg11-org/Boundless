@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
   <h2>Edit History for Message by {{ message.sender.username }}</h2>
@@ -30,5 +30,5 @@
       <li>No edits for this message.</li>
     {% endfor %}
   </ul>
-  <a href="{% url 'channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Back to Channel</a>
+  <a href="{% url 'core:channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Back to Channel</a>
 {% endblock %}

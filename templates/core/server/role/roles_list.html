@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
   <h2>Roles for {{ server.name }}</h2>
@@ -23,11 +23,11 @@
     {% for role in roles %}
       <li>
         <span style="color: {{ role.color }};">{{ role.name }}</span>
-        <a href="{% url 'edit_role' server_id=server.id role_id=role.id %}">Edit</a>
-        <a href="{% url 'assign_role' server_id=server.id role_id=role.id %}">Assign</a>
+        <a href="{% url 'core:edit_role' server_id=server.id role_id=role.id %}">Edit</a>
+        <a href="{% url 'core:assign_role' server_id=server.id role_id=role.id %}">Assign</a>
       </li>
     {% endfor %}
   </ul>
-  <a href="{% url 'create_role' server_id=server.id %}">Create New Role</a>
-  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <a href="{% url 'core:create_role' server_id=server.id %}">Create New Role</a>
+  <a href="{% url 'core:server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}

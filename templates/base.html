@@ -42,11 +42,11 @@
             <form action="{% url 'home' %}">
               <button type="submit">Home</button>
             </form>
-            <form action="{% url 'server_list' %}">
+            <form action="{% url 'core:server_list' %}">
               <button type="submit">Servers</button>
             </form>
             {% if user.is_authenticated %}
-                <form action="{% url 'profile' %}">
+                <form action="{% url 'core:profile' %}">
                     <button type="submit">Profile</button>
                 </form>
                 <form action="{% url 'logout' %}" method="post">
@@ -69,7 +69,7 @@
     </main>
 
     <footer>
-        <p>&copy; {% now "Y" %} Boundless D.B.A. TG11</p>
+        <p>&copy; {% now "Y" %} Boundless by TG11 </p>
     </footer>
     
 </body>

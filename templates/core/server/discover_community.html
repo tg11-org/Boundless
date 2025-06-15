@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
   <h2>Discover Community Servers</h2>
@@ -23,11 +23,11 @@
     {% for server in servers %}
       <li>
         {{ server.name }} -
-        <a href="{% url 'join_server' code=server.join_code %}">Join</a>
+        <a href="{% url 'core:join_server' code=server.join_code %}">Join</a>
       </li>
     {% empty %}
       <li>No community servers to discover!</li>
     {% endfor %}
   </ul>
-  <a href="{% url 'server_list' %}">Back to My Servers</a>
+  <a href="{% url 'core:server_list' %}">Back to My Servers</a>
 {% endblock %}

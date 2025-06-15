@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory, Role
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
-from .forms import CustomUserCreationForm, ProfileEditForm
+from .forms import CustomUserCreationForm, ProfileEditForm, ServerSettingsForm
 from django.http import HttpResponseForbidden
 import uuid
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
-    return render(request, "core/home.html")
+    return render(request, "home.html")
 
 
 @login_required
@@ -161,7 +161,7 @@ def signup(request):
             return redirect("home")
     else:
         form = CustomUserCreationForm()
-    return render(request, "core/signup.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def theme_preview(request):
@@ -465,3 +465,20 @@ def friend_requests(request, user_id):
 def friends_list(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
     return render(request, "core/profile/friends_list.html", {"friends": profile_user.friends.all()})
+
+
+@login_required
+def server_settings(request, server_id):
+    server = get_object_or_404(Server, id=server_id, owner=request.user)
+
+    if request.method == "POST":
+        form = ServerSettingsForm(request.POST, instance=server)
+        if form.is_valid():
+            form.save()
+            return redirect("server_detail", server_id=server.id)
+    else:
+        form = ServerSettingsForm(instance=server)
+
+    return render(
+        request, "core/server/server_settings.html", {"server": server, "form": form}
+    )

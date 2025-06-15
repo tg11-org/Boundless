@@ -15,21 +15,21 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <h2>Friend Requests</h2>
 <ul>
   {% for request in friend_requests %}
     <li>
-      <a href="{% url 'profile' user_id=request.from_user.id %}">
+      <a href="{% url 'core:profile' user_id=request.from_user.id %}">
         {{ request.from_user.username }}
       </a>
-      <form action="{% url 'accept_friend_request' request.id %}" method="post" style="display:inline;">
+      <form action="{% url 'core:accept_friend_request' request.id %}" method="post" style="display:inline;">
         {% csrf_token %}
         <button type="submit">Accept</button>
       </form>
-      <form action="{% url 'decline_friend_request' request.id %}" method="post" style="display:inline;">
+      <form action="{% url 'core:decline_friend_request' request.id %}" method="post" style="display:inline;">
         {% csrf_token %}
         <button type="submit">Decline</button>
       </form>

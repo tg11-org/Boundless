@@ -15,8 +15,14 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
-  <h2>You have been logged out.</h2>
-  <p><a href="{% url 'home' %}">Return to home</a></p>
+<h2>Sign Up</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
+
 {% endblock %}

@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
   <h2>Create Category in {{ server.name }}</h2>
@@ -24,5 +24,5 @@
     {{ form.as_p }}
     <button type="submit">Create</button>
   </form>
-  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <a href="{% url 'core:server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}
