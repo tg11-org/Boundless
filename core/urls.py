@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 import logging
 logger = logging.getLogger(__name__)
 
+app_name = "core"
+
 urlpatterns = [
     path("servers/", views.server_list, name="server_list"),
     path("servers/join/<str:code>/", views.join_server, name="join_server"),

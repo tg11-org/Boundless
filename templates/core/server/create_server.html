@@ -15,14 +15,13 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Edit Message</h2>
-  <form method="post">
+  <h2>Create Server</h2>
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <textarea name="content">{{ message.content }}</textarea>
-    <button type="submit">Save Changes</button>
+    {{ form.as_p }}
+    <button type="submit">Create</button>
   </form>
-  <a href="{% url 'channel_detail' server_id=message.channel.server.id category_id=message.channel.category.id channel_id=message.channel.id %}">Cancel / Back</a>
 {% endblock %}

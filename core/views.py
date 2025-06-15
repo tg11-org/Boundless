@@ -16,20 +16,20 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "core/home.html")
 
 
 @login_required
 def server_list(request):
     # servers = Server.objects.all()
     servers = request.user.servers.all()  # Only servers the user is a member of
-    return render(request, "servers.html", {"servers": servers})
+    return render(request, "core/server/servers.html", {"servers": servers})
 
 
 @login_required
 def discover_community_servers(request):
     servers = Server.objects.filter(community=True).exclude(members=request.user)
-    return render(request, "discover_community.html", {"servers": servers})
+    return render(request, "core/server/discover_community.html", {"servers": servers})
 
 
 @login_required
@@ -52,7 +52,7 @@ def server_detail(request, server_id):
 
     return render(
         request,
-        "server_detail.html",
+        "core/server/server_detail.html",
         {
             "server": server,
             "categories": categories,
@@ -107,7 +107,7 @@ def profile(request, **kwargs):
             uuid_obj = uuid.UUID(user_id, version=4)
             user_profile = User.objects.get(id=uuid_obj)
         except (ValueError, ValidationError, User.DoesNotExist):
-            return render(request, "user_not_found.html", status=404)
+            return render(request, "core/errors/user_not_found.html", status=404)
     else:
         user_profile = request.user
 
@@ -119,7 +119,7 @@ def profile(request, **kwargs):
 
     return render(
         request,
-        "profile.html",
+        "core/profile/profile.html",
         {
             "user_profile": user_profile,
             "shared_servers": shared_servers,
@@ -138,7 +138,7 @@ def edit_profile(request):
             return redirect("profile")
     else:
         form = ProfileEditForm(instance=request.user)
-    return render(request, "edit_profile.html", {"form": form})
+    return render(request, "core/profile/edit_profile.html", {"form": form})
 
 
 def signup(request):
@@ -161,7 +161,7 @@ def signup(request):
             return redirect("home")
     else:
         form = CustomUserCreationForm()
-    return render(request, "signup.html", {"form": form})
+    return render(request, "core/signup.html", {"form": form})
 
 
 def theme_preview(request):
@@ -201,7 +201,7 @@ def create_server(request):
             return redirect("server_detail", server_id=server.id)
     else:
         form = ServerCreationForm()
-    return render(request, "create_server.html", {"form": form})
+    return render(request, "core/server/create_server.html", {"form": form})
 
 
 class CategoryCreationForm(forms.ModelForm):
@@ -222,7 +222,7 @@ def create_category(request, server_id):
             return redirect("server_detail", server_id=server.id)
     else:
         form = CategoryCreationForm()
-    return render(request, "create_category.html", {"form": form, "server": server})
+    return render(request, "core/server/category/create_category.html", {"form": form, "server": server})
 
 
 class ChannelCreationForm(forms.ModelForm):
@@ -252,7 +252,7 @@ def create_channel(request, server_id, category_id=None):
 
     # Load categories for dropdown
     categories = server.categories.all()
-    return render(request, "create_channel.html", {"server": server, "categories": categories, "selected_category": category_id})
+    return render(request, "core/server/category/channel/create_channel.html", {"server": server, "categories": categories, "selected_category": category_id})
 
 
 @login_required
@@ -277,7 +277,7 @@ def channel_detail(request, server_id, category_id, channel_id):
     messages = channel.messages.order_by("created_at")
     return render(
         request,
-        "channel_detail.html",
+        "core/server/category/channel/channel_detail.html",
         {
             "server": server,
             "category": category,
@@ -298,7 +298,7 @@ def category_detail(request, server_id, category_id):
 
     return render(
         request,
-        "category_detail.html",
+        "core/server/category/category_detail.html",
         {
             "server": server,
             "category": category,
@@ -331,7 +331,7 @@ def edit_message(request, server_id, category_id, channel_id, message_id):
             channel_id=message.channel.id,
         )
 
-    return render(request, "edit_message.html", {"message": message})
+    return render(request, "core/server/category/channel/message/edit_message.html", {"message": message})
 
 
 @login_required
@@ -347,7 +347,7 @@ def message_history(request, server_id, category_id, channel_id, message_id):
 
     return render(
         request,
-        "message_history.html",
+        "core/server/category/channel/message/message_history.html",
         {
             "server": server,
             "category": category,
@@ -378,7 +378,7 @@ def delete_message(request, message_id):
 def roles_list(request, server_id):
     server = get_object_or_404(Server, id=server_id, owner=request.user)
     roles = server.roles.all()
-    return render(request, "roles_list.html", {"server": server, "roles": roles})
+    return render(request, "core/server/role/roles_list.html", {"server": server, "roles": roles})
 
 
 @login_required
@@ -413,7 +413,7 @@ def create_role(request, server_id):
     else:
         form = RoleForm()
 
-    return render(request, "create_role.html", {"form": form, "server": server})
+    return render(request, "core/server/role/create_role.html", {"form": form, "server": server})
 
 
 @login_required
@@ -430,7 +430,7 @@ def edit_role(request, server_id, role_id):
         form = RoleForm(instance=role)
 
     return render(
-        request, "edit_role.html", {"form": form, "role": role, "server": server}
+        request, "core/server/role/edit_role.html", {"form": form, "role": role, "server": server}
     )
 
 
@@ -450,7 +450,7 @@ def assign_role(request, server_id, role_id):
 
     return render(
         request,
-        "assign_role.html",
+        "core/server/role/assign_role.html",
         {"server": server, "role": role, "members": members},
     )
 
@@ -458,10 +458,10 @@ def assign_role(request, server_id, role_id):
 @login_required
 def friend_requests(request, user_id):
     requests = FriendRequest.objects.filter(to_user=request.user, status="pending")
-    return render(request, "friend_requests.html", {"requests": requests})
+    return render(request, "core/profile/friend_requests.html", {"requests": requests})
 
 
 @login_required
 def friends_list(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
-    return render(request, "friends_list.html", {"friends": profile_user.friends.all()})
+    return render(request, "core/profile/friends_list.html", {"friends": profile_user.friends.all()})

@@ -15,10 +15,14 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
-
+{% extends 'core/base.html' %}
 {% block content %}
-  <h1>User not found.</h1>
-  <p>The user ID provided is not valid or the user does not exist.</p>
-  <a href="{% url 'home' %}">Return home</a>
+<h2>Sign Up</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
+
 {% endblock %}

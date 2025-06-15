@@ -15,19 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Discover Community Servers</h2>
-  <ul>
-    {% for server in servers %}
-      <li>
-        {{ server.name }} -
-        <a href="{% url 'join_server' code=server.join_code %}">Join</a>
-      </li>
-    {% empty %}
-      <li>No community servers to discover!</li>
-    {% endfor %}
-  </ul>
-  <a href="{% url 'server_list' %}">Back to My Servers</a>
+  <h1>User not found.</h1>
+  <p>The user ID provided is not valid or the user does not exist.</p>
+  <a href="{% url 'home' %}">Return home</a>
 {% endblock %}

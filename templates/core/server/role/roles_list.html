@@ -15,14 +15,19 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-<h2>Edit Profile</h2>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save Changes</button>
-</form>
-<a href="{% url 'profile' %}">Back to Profile</a>
+  <h2>Roles for {{ server.name }}</h2>
+  <ul>
+    {% for role in roles %}
+      <li>
+        <span style="color: {{ role.color }};">{{ role.name }}</span>
+        <a href="{% url 'edit_role' server_id=server.id role_id=role.id %}">Edit</a>
+        <a href="{% url 'assign_role' server_id=server.id role_id=role.id %}">Assign</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'create_role' server_id=server.id %}">Create New Role</a>
+  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
 {% endblock %}

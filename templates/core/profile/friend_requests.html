@@ -15,18 +15,27 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Assign Role: {{ role.name }} ({{ server.name }})</h2>
-  <form method="post">
-    {% csrf_token %}
-    <select name="user_id">
-      {% for member in members %}
-        <option value="{{ member.id }}">{{ member.username }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit">Assign</button>
-  </form>
-  <a href="{% url 'roles_list' server_id=server.id %}">Back to Roles</a>
+<h2>Friend Requests</h2>
+<ul>
+  {% for request in friend_requests %}
+    <li>
+      <a href="{% url 'profile' user_id=request.from_user.id %}">
+        {{ request.from_user.username }}
+      </a>
+      <form action="{% url 'accept_friend_request' request.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Accept</button>
+      </form>
+      <form action="{% url 'decline_friend_request' request.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Decline</button>
+      </form>
+    </li>
+  {% empty %}
+    <li>No pending requests.</li>
+  {% endfor %}
+</ul>
 {% endblock %}

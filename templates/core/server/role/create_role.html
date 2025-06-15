@@ -15,14 +15,14 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Create Category in {{ server.name }}</h2>
+  <h2>Create Role for {{ server.name }}</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create</button>
+    <button type="submit">Create Role</button>
   </form>
-  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <a href="{% url 'roles_list' server_id=server.id %}">Back to Roles</a>
 {% endblock %}

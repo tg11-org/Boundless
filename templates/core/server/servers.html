@@ -15,14 +15,15 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% block content %}
-<h2>Login</h2>
-
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-
+<a href="{% url 'create_server' %}"><button>Create Server</button></a>
+<h2>Servers List</h2>
+<ul>
+  {% for server in servers %}
+    <li>
+      <a href="{% url 'server_detail' server.id %}">{{ server.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
 {% endblock %}

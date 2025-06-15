@@ -15,15 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
+
 {% block content %}
-<a href="{% url 'create_server' %}"><button>Create Server</button></a>
-<h2>Servers List</h2>
-<ul>
-  {% for server in servers %}
-    <li>
-      <a href="{% url 'server_detail' server.id %}">{{ server.name }}</a>
-    </li>
-  {% endfor %}
-</ul>
+<h2>Welcome to Boundless!</h2>
+<p>This is the home page.</p>
+<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
 {% endblock %}

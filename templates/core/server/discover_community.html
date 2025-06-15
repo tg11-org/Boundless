@@ -15,19 +15,19 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Roles for {{ server.name }}</h2>
+  <h2>Discover Community Servers</h2>
   <ul>
-    {% for role in roles %}
+    {% for server in servers %}
       <li>
-        <span style="color: {{ role.color }};">{{ role.name }}</span>
-        <a href="{% url 'edit_role' server_id=server.id role_id=role.id %}">Edit</a>
-        <a href="{% url 'assign_role' server_id=server.id role_id=role.id %}">Assign</a>
+        {{ server.name }} -
+        <a href="{% url 'join_server' code=server.join_code %}">Join</a>
       </li>
+    {% empty %}
+      <li>No community servers to discover!</li>
     {% endfor %}
   </ul>
-  <a href="{% url 'create_role' server_id=server.id %}">Create New Role</a>
-  <a href="{% url 'server_detail' server_id=server.id %}">Back to Server</a>
+  <a href="{% url 'server_list' %}">Back to My Servers</a>
 {% endblock %}
