@@ -170,6 +170,8 @@ def theme_preview(request):
 
 
 class ServerCreationForm(forms.ModelForm):
+    community = forms.BooleanField(required=False, initial=False, label="Public (Community Server)?")
+
     class Meta:
         model = Server
         fields = ["name", "description", "icon", "community"]
