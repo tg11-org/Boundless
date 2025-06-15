@@ -22,22 +22,25 @@
 <a href="{% url 'create_category' server_id=server.id %}"><button>Create Category</button></a>
 
 
-{% for category in categories %}
-  <h3>
-    <a href="{% url 'category_detail' server_id=server.id category_id=category.id %}">
-      {{ category.name }}
-    </a>
-  </h3>
-  <ul>
-    {% for channel in category.channels.all %}
-      <li>
-        <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
-          {{ channel.name }} ({{ channel.channel_type }})
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-{% endfor %}
+<div class="sidebar">
+  <img src="{{ server.icon.url }}" alt="{{ server.name }} Icon" class="server-icon">
+  <h2>{{ server.name }}</h2>
+  {% for category in server.categories.all %}
+    <details>
+      <summary>{{ category.name }}</summary>
+      <ul>
+        {% for channel in category.channels.all %}
+          <li>
+            <a href="{% url 'channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
+              {{ channel.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </details>
+  {% endfor %}
+</div>
+
 
 
 

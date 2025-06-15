@@ -66,6 +66,12 @@
     {% endfor %}
   </ul>
 {% endif %}
+{% if user != user_profile and not user_profile in user.friends.all %}
+  <form action="{% url 'send_friend_request' user_id=user_profile.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Send Friend Request</button>
+  </form>
+{% endif %}
 {% if user.id == user_profile.id %}
   <a href="{% url 'edit_profile' %}">Edit Profile</a>
 {% endif %}

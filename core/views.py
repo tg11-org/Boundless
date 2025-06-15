@@ -172,7 +172,7 @@ def theme_preview(request):
 class ServerCreationForm(forms.ModelForm):
     class Meta:
         model = Server
-        fields = ["name", "description", "icon"]
+        fields = ["name", "description", "icon", "community"]
 
 
 @login_required
@@ -451,3 +451,15 @@ def assign_role(request, server_id, role_id):
         "assign_role.html",
         {"server": server, "role": role, "members": members},
     )
+
+
+@login_required
+def friend_requests(request, user_id):
+    requests = FriendRequest.objects.filter(to_user=request.user, status="pending")
+    return render(request, "friend_requests.html", {"requests": requests})
+
+
+@login_required
+def friends_list(request, user_id):
+    profile_user = get_object_or_404(User, id=user_id)
+    return render(request, "friends_list.html", {"friends": profile_user.friends.all()})
