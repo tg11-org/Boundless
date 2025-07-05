@@ -10,7 +10,7 @@ venv/
 *.pot
 db.sqlite3
 #media/
-#staticfiles/
+staticfiles/
 
 # Migrations (optional)
 */migrations/*.pyc
