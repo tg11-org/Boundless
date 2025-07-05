@@ -9,8 +9,8 @@ venv/
 *.log
 *.pot
 db.sqlite3
-media/
-staticfiles/
+#media/
+#staticfiles/
 
 # Migrations (optional)
 */migrations/*.pyc
