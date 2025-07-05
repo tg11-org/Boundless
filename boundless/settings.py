@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "channels",
-    "tailwind",
+#    "tailwind",
     "theme"
 ]
 
@@ -176,3 +176,4 @@ ALLOWED_HOSTS = ["*"]  # Or your domain in production
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 TAILWIND_APP_NAME = "theme"
+TAILWIND_CLI_COMMAND = "npm run build:tailwind"
