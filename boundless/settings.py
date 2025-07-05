@@ -27,6 +27,33 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://boundless.onl",
+    "https://boundless.onl",
+    "http://www.boundless.onl",
+    "https://www.boundless.onl",
+    "http://boundless.cv",
+    "https://boundless.cv",
+    "http://www.boundless.cv",
+    "https://www.boundless.cv",
+    "http://boundless.ing",
+    "https://boundless.ing",
+    "http://www.boundless.ing",
+    "https://www.boundless.ing",
+    "http://boundless.website",
+    "https://boundless.website",
+    "http://www.boundless.website",
+    "https://www.boundless.website",
+    "http://boundless.tg11.org",
+    "https://boundless.tg11.org",
+    "http://www.boundless.tg11.org",
+    "https://www.boundless.tg11.org",
+    "http://172.105.155.247",
+    "https://172.105.155.247",
+    "http://2603:9001:ff00:3a:80b1:99ad:85b1:7c08",
+    "https://2603:9001:ff00:3a:80b1:99ad:85b1:7c08",
+]
+
 
 # Application definition
 
@@ -39,6 +66,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "channels",
+    "tailwind",
+    "theme"
 ]
 
 MIDDLEWARE = [
@@ -145,3 +174,5 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]  # Or your domain in production
 
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
+TAILWIND_APP_NAME = "theme"

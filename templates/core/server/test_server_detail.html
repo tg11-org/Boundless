@@ -1,0 +1,72 @@
+<!--
+ Copyright (C) 2025 TG11
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+ 
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid grid-cols-[250px_1fr] grid-rows-[auto_1fr] h-screen">
+
+  <!-- Sidebar: Server + Categories + Channels -->
+  <aside class="bg-surface text-text border-r border-input-border p-4 overflow-y-auto">
+    <div class="flex items-center gap-3 mb-4">
+      <img src="{{ server.icon.url }}" class="rounded-full object-cover" alt="{{ server.name }}" style='width: 1vw; height: 1vw;'>
+      <h2 class="text-lg font-semibold">{{ server.name }}</h2>
+    </div>
+    {% for category in categories %}
+      <div class="mb-2">
+        <h3 class="text-sm text-accent font-bold uppercase tracking-wide">{{ category.name }}</h3>
+        <ul class="pl-3 mt-1 space-y-1">
+          {% for channel in category.channels.all %}
+            <li>
+              <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}"
+                 class="block text-sm hover:text-accent {% if channel.id == active_channel.id %}font-bold{% endif %}">
+                # {{ channel.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </aside>
+
+  <!-- Topbar (optional for server tools or breadcrumbs) -->
+  <header class="col-span-2 bg-header-bg text-text p-3 flex justify-between items-center border-b border-input-border">
+    <h1 class="text-lg font-semibold"># {{ active_channel.name }}</h1>
+    <!-- Optional buttons: settings, theme selector, etc. -->
+  </header>
+
+  <!-- Main Content: Messages -->
+  <main class="col-span-1 overflow-y-auto bg-base text-text p-4 space-y-4">
+    {% for message in messages %}
+      <div class="flex items-start gap-3">
+        <img src="{{ message.sender.profile.avatar.url }}" class="w-8 h-8 rounded-full object-cover">
+        <div>
+          <p class="font-semibold text-sm">{{ message.sender.username }}</p>
+          <p class="text-sm">{{ message.content }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </main>
+
+  <!-- Optional: Right Sidebar for Members or Thread Info 
+
+  <aside class="hidden lg:block bg-surface text-text border-l border-input-border p-4">
+    Members panel, thread info, etc.
+  </aside>
+-->
+
+
+</div>
+{% endblock %}

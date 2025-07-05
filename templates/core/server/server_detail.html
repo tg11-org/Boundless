@@ -17,13 +17,12 @@
 
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ server.name }}</h2>
+<img src="{{ server.icon.url }}" alt="{{ server.name }} Icon" style='width: 2vw; height: 2vw;'><h1>{{ server.name }}</h1>
 <p>{{ server.description }}</p>
 <a href="{% url 'core:create_category' server_id=server.id %}"><button>Create Category</button></a>
 
 
 <div class="sidebar">
-  <img src="{{ server.icon.url }}" alt="{{ server.name }} Icon" class="server-icon">
   <h2>{{ server.name }}</h2>
   {% for category in server.categories.all %}
     <details>

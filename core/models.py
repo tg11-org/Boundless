@@ -139,7 +139,7 @@ class Channel(models.Model):
         blank=True,
     )
     name = models.CharField(max_length=100)
-    channel_type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=TEXT)
+    channel_type = models.CharField(max_length=32, choices=TYPE_CHOICES, default=TEXT)
     allowed_roles = models.ManyToManyField(Role, related_name="channels", blank=True)
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

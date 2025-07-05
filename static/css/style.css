@@ -1,69 +1,890 @@
-/**
- * Copyright (C) 2025 TG11
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+/*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
+@layer properties {
+    @supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))) {
 
+        *,
+        :before,
+        :after,
+        ::backdrop {
+            --tw-border-style: solid;
+            --tw-leading: initial;
+            --tw-font-weight: initial;
+            --tw-tracking: initial;
+            --tw-shadow: 0 0 #0000;
+            --tw-shadow-color: initial;
+            --tw-shadow-alpha: 100%;
+            --tw-inset-shadow: 0 0 #0000;
+            --tw-inset-shadow-color: initial;
+            --tw-inset-shadow-alpha: 100%;
+            --tw-ring-color: initial;
+            --tw-ring-shadow: 0 0 #0000;
+            --tw-inset-ring-color: initial;
+            --tw-inset-ring-shadow: 0 0 #0000;
+            --tw-ring-inset: initial;
+            --tw-ring-offset-width: 0px;
+            --tw-ring-offset-color: #fff;
+            --tw-ring-offset-shadow: 0 0 #0000;
+            --tw-duration: initial
+        }
+    }
+}
+
+@layer theme {
+
+    :root,
+    :host {
+        --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --color-gray-50: oklch(98.5% .002 247.839);
+        --spacing: .25rem;
+        --text-sm: .875rem;
+        --text-sm--line-height: calc(1.25/.875);
+        --text-xl: 1.25rem;
+        --text-xl--line-height: calc(1.75/1.25);
+        --text-5xl: 3rem;
+        --text-5xl--line-height: 1;
+        --font-weight-semibold: 600;
+        --font-weight-bold: 700;
+        --tracking-normal: 0em;
+        --leading-normal: 1.5;
+        --default-transition-duration: .15s;
+        --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+        --default-font-family: var(--font-sans);
+        --default-mono-font-family: var(--font-mono)
+    }
+}
+
+@layer base {
+
+    *,
+    :after,
+    :before,
+    ::backdrop {
+        box-sizing: border-box;
+        border: 0 solid;
+        margin: 0;
+        padding: 0
+    }
+
+    ::file-selector-button {
+        box-sizing: border-box;
+        border: 0 solid;
+        margin: 0;
+        padding: 0
+    }
+
+    html,
+    :host {
+        -webkit-text-size-adjust: 100%;
+        tab-size: 4;
+        line-height: 1.5;
+        font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+        font-feature-settings: var(--default-font-feature-settings, normal);
+        font-variation-settings: var(--default-font-variation-settings, normal);
+        -webkit-tap-highlight-color: transparent
+    }
+
+    hr {
+        height: 0;
+        color: inherit;
+        border-top-width: 1px
+    }
+
+    abbr:where([title]) {
+        -webkit-text-decoration: underline dotted;
+        text-decoration: underline dotted
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: inherit;
+        font-weight: inherit
+    }
+
+    a {
+        color: inherit;
+        -webkit-text-decoration: inherit;
+        -webkit-text-decoration: inherit;
+        -webkit-text-decoration: inherit;
+        text-decoration: inherit
+    }
+
+    b,
+    strong {
+        font-weight: bolder
+    }
+
+    code,
+    kbd,
+    samp,
+    pre {
+        font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+        font-feature-settings: var(--default-mono-font-feature-settings, normal);
+        font-variation-settings: var(--default-mono-font-variation-settings, normal);
+        font-size: 1em
+    }
+
+    small {
+        font-size: 80%
+    }
+
+    sub,
+    sup {
+        vertical-align: baseline;
+        font-size: 75%;
+        line-height: 0;
+        position: relative
+    }
+
+    sub {
+        bottom: -.25em
+    }
+
+    sup {
+        top: -.5em
+    }
+
+    table {
+        text-indent: 0;
+        border-color: inherit;
+        border-collapse: collapse
+    }
+
+    :-moz-focusring {
+        outline: auto
+    }
+
+    progress {
+        vertical-align: baseline
+    }
+
+    summary {
+        display: list-item
+    }
+
+    ol,
+    ul,
+    menu {
+        list-style: none
+    }
+
+    img,
+    svg,
+    video,
+    canvas,
+    audio,
+    iframe,
+    embed,
+    object {
+        vertical-align: middle;
+        display: block
+    }
+
+    img,
+    video {
+        max-width: 100%;
+        height: auto
+    }
+
+    button,
+    input,
+    select,
+    optgroup,
+    textarea {
+        font: inherit;
+        font-feature-settings: inherit;
+        font-variation-settings: inherit;
+        letter-spacing: inherit;
+        color: inherit;
+        opacity: 1;
+        background-color: #0000;
+        border-radius: 0
+    }
+
+    ::file-selector-button {
+        font: inherit;
+        font-feature-settings: inherit;
+        font-variation-settings: inherit;
+        letter-spacing: inherit;
+        color: inherit;
+        opacity: 1;
+        background-color: #0000;
+        border-radius: 0
+    }
+
+    :where(select:is([multiple], [size])) optgroup {
+        font-weight: bolder
+    }
+
+    :where(select:is([multiple], [size])) optgroup option {
+        padding-inline-start: 20px
+    }
+
+    ::file-selector-button {
+        margin-inline-end: 4px
+    }
+
+    ::placeholder {
+        opacity: 1
+    }
+
+    @supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px) {
+        ::placeholder {
+            color: currentColor
+        }
+
+        @supports (color:color-mix(in lab, red, red)) {
+            ::placeholder {
+                color: color-mix(in oklab, currentcolor 50%, transparent)
+            }
+        }
+    }
+
+    textarea {
+        resize: vertical
+    }
+
+    ::-webkit-search-decoration {
+        -webkit-appearance: none
+    }
+
+    ::-webkit-date-and-time-value {
+        min-height: 1lh;
+        text-align: inherit
+    }
+
+    ::-webkit-datetime-edit {
+        display: inline-flex
+    }
+
+    ::-webkit-datetime-edit-fields-wrapper {
+        padding: 0
+    }
+
+    ::-webkit-datetime-edit {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-year-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-month-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-day-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-hour-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-minute-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-second-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-millisecond-field {
+        padding-block: 0
+    }
+
+    ::-webkit-datetime-edit-meridiem-field {
+        padding-block: 0
+    }
+
+    :-moz-ui-invalid {
+        box-shadow: none
+    }
+
+    button,
+    input:where([type=button], [type=reset], [type=submit]) {
+        appearance: button
+    }
+
+    ::file-selector-button {
+        appearance: button
+    }
+
+    ::-webkit-inner-spin-button {
+        height: auto
+    }
+
+    ::-webkit-outer-spin-button {
+        height: auto
+    }
+
+    [hidden]:where(:not([hidden=until-found])) {
+        display: none !important
+    }
+}
+
+@layer components;
+
+@layer utilities {
+    .static {
+        position: static
+    }
+
+    .container {
+        width: 100%
+    }
+
+    @media (min-width:40rem) {
+        .container {
+            max-width: 40rem
+        }
+    }
+
+    @media (min-width:48rem) {
+        .container {
+            max-width: 48rem
+        }
+    }
+
+    @media (min-width:64rem) {
+        .container {
+            max-width: 64rem
+        }
+    }
+
+    @media (min-width:80rem) {
+        .container {
+            max-width: 80rem
+        }
+    }
+
+    @media (min-width:96rem) {
+        .container {
+            max-width: 96rem
+        }
+    }
+
+    .mx-auto {
+        margin-inline: auto
+    }
+
+    .mt-4 {
+        margin-top: calc(var(--spacing)*4)
+    }
+
+    .ml-2 {
+        margin-left: calc(var(--spacing)*2)
+    }
+
+    .block {
+        display: block
+    }
+
+    .contents {
+        display: contents
+    }
+
+    .flex {
+        display: flex
+    }
+
+    .table {
+        display: table
+    }
+
+    .h-screen {
+        height: 100vh
+    }
+
+    .min-h-\[60vh\] {
+        min-height: 60vh
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap
+    }
+
+    .items-center {
+        align-items: center
+    }
+
+    .justify-center {
+        justify-content: center
+    }
+
+    .gap-2 {
+        gap: calc(var(--spacing)*2)
+    }
+
+    .border {
+        border-style: var(--tw-border-style);
+        border-width: 1px
+    }
+
+    .bg-gray-50 {
+        background-color: var(--color-gray-50)
+    }
+
+    .p-3 {
+        padding: calc(var(--spacing)*3)
+    }
+
+    .p-4 {
+        padding: calc(var(--spacing)*4)
+    }
+
+    .p-6 {
+        padding: calc(var(--spacing)*6)
+    }
+
+    .text-center {
+        text-align: center
+    }
+
+    .font-serif {
+        font-family: var(--font-serif)
+    }
+
+    .text-5xl {
+        font-size: var(--text-5xl);
+        line-height: var(--tw-leading, var(--text-5xl--line-height))
+    }
+
+    .text-sm {
+        font-size: var(--text-sm);
+        line-height: var(--tw-leading, var(--text-sm--line-height))
+    }
+
+    .text-xl {
+        font-size: var(--text-xl);
+        line-height: var(--tw-leading, var(--text-xl--line-height))
+    }
+
+    .leading-normal {
+        --tw-leading: var(--leading-normal);
+        line-height: var(--leading-normal)
+    }
+
+    .font-bold {
+        --tw-font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-bold)
+    }
+
+    .font-semibold {
+        --tw-font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-semibold)
+    }
+
+    .tracking-normal {
+        --tw-tracking: var(--tracking-normal);
+        letter-spacing: var(--tracking-normal)
+    }
+
+    .italic {
+        font-style: italic
+    }
+
+    .shadow-md {
+        --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)
+    }
+
+    .transition-colors {
+        transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+        transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+        transition-duration: var(--tw-duration, var(--default-transition-duration))
+    }
+
+    .duration-300 {
+        --tw-duration: .3s;
+        transition-duration: .3s
+    }
+}
+
+:root {
+    --base: #121212;
+    --surface: #1e1e1e;
+    --text: #ddd;
+    --accent: #007acc;
+    --header-bg: #1e1e1e;
+    --footer-bg: #1e1e1e;
+    --nav-bg: #1e1e1e;
+    --nav-text: #fff;
+    --button-bg: #333;
+    --button-hover: #555;
+    --input-bg: #1a1a1a;
+    --input-text: #ccc;
+    --input-border: #333;
+    --input-focus: #555;
+    --radius: .5rem;
+    --shadow: 0 2px 6px #0000004d;
+    --font-default: Arial, sans-serif;
+    --font-sans: "Inter", sans-serif;
+    --font-serif: "Merriweather", serif;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-sm: .875rem;
+    --code-bg: #1e1e1e;
+    --code-text: #d4d4d4;
+    --code-border: #3c3c3c;
+    --quote-bg: #1a1a1a;
+    --quote-border: #555;
+    --link-color: #4ea1d3;
+    --link-hover: #82d8ff
+}
+
+html,
 body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #ddd;
+    background-color: var(--base);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    scrollbar-color: var(--scroll-thumb)var(--scroll-track);
+    scrollbar-width: thin;
     margin: 0;
     padding: 0;
+    line-height: 1.5;
+    transition: background-color .3s, color .3s
 }
 
-header, footer {
-    background: #1e1e1e;
-    color: #eee;
-    padding: 10px 20px;
+header {
+    background-color: var(--header-bg);
+    color: var(--text);
+    box-shadow: var(--shadow)
 }
 
-nav a {
-    color: #ddd;
-    margin-right: 10px;
-    text-decoration: none;
-}
-
-main {
-    padding: 20px;
+footer {
+    background-color: var(--footer-bg);
+    color: var(--text);
+    box-shadow: var(--shadow)
 }
 
 nav {
-    display: flex;
-    gap: 10px;
-    background: #1e1e1e;
-    padding: 10px;
+    background-color: var(--nav-bg);
+    color: var(--nav-text)
 }
 
-nav form button {
-    background: #333;
-    color: #ddd;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
+main {
+    background-color: var(--surface);
+    color: var(--text)
+}
+
+form {
+    color: var(--text);
+    background-color: #0000
+}
+
+input,
+textarea,
+select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius);
+    padding: .5rem;
+    font-family: inherit;
+    transition: border-color .3s, box-shadow .3s
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--input-focus);
+    outline: none
+}
+
+button {
+    background-color: var(--button-bg);
+    color: var(--text);
+    border-radius: var(--radius);
     cursor: pointer;
-    transition: background 0.3s;
+    border: none;
+    padding: .5rem 1rem;
+    transition: background-color .3s
 }
 
-nav form button:hover {
-    background: #555;
+button:hover {
+    background-color: var(--button-hover)
 }
 
-.server-icon {
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 50%; /* optional for circle */
-    margin-bottom: 1rem;
+pre,
+code {
+    background-color: var(--code-bg);
+    color: var(--code-text);
+    font-family: var(--font-mono);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    padding: .5rem;
+    overflow-x: auto
+}
+
+blockquote {
+    background-color: var(--quote-bg);
+    border-left: 4px solid var(--quote-border);
+    color: var(--text);
+    margin: 1rem 0;
+    padding: .5rem 1rem
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scroll-track)
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb);
+    border-radius: 10px
+}
+
+[data-theme=dark] {
+    --base: #121212;
+    --surface: #1e1e1e;
+    --text: #ddd;
+    --accent: #007acc;
+    --header-bg: #1e1e1e;
+    --footer-bg: #1e1e1e;
+    --nav-bg: #1e1e1e;
+    --nav-text: #fff;
+    --button-bg: #333;
+    --button-hover: #555;
+    --input-bg: #1a1a1a;
+    --input-text: #ccc;
+    --input-border: #333;
+    --input-focus: #555;
+    --radius: .5rem;
+    --shadow: 0 2px 6px #0000004d;
+    --font-default: Arial, sans-serif;
+    --font-sans: "Inter", sans-serif;
+    --font-serif: "Merriweather", serif;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-sm: .875rem;
+    --code-bg: #1e1e1e;
+    --code-text: #d4d4d4;
+    --code-border: #3c3c3c;
+    --quote-bg: #1a1a1a;
+    --quote-border: #555;
+    --link-color: #4ea1d3;
+    --link-hover: #82d8ff
+}
+
+[data-theme=foxgirl] {
+    --base: #fff0f6;
+    --text: #5a3a4d;
+    --surface: #ffe6f0;
+    --accent: #f8b;
+    --nav-bg: #fcd;
+    --nav-text: #5a3a4d;
+    --header-bg: #ffd6e6;
+    --footer-bg: #ffd6e6;
+    --button-bg: #ffb3d1;
+    --button-hover: #ffa0c9;
+    --input-bg: #ffeaf1;
+    --input-text: #5a3a4d;
+    --input-border: #ff99c8;
+    --input-focus: #ff66a3;
+    --code-bg: #fff0fa;
+    --code-text: #7a2d58;
+    --code-border: #ffaad5;
+    --quote-bg: #ffe0eb;
+    --quote-border: #ff66a3;
+    --scroll-track: #ffeef4;
+    --scroll-thumb: #f9c;
+    --font-sans: "Quicksand", sans-serif;
+    --font-mono: "Fira Code", monospace;
+    --radius: .75rem;
+    --shadow: 0 2px 8px #f8b3
+}
+
+[data-theme=halloween] {
+    --base: #000;
+    --text: #ff7518;
+    --surface: #1b1b1b;
+    --accent: #f60;
+    --nav-bg: #111;
+    --nav-text: #f60;
+    --header-bg: #200;
+    --footer-bg: #200;
+    --button-bg: #300;
+    --button-hover: #500;
+    --input-bg: #1a0a0a;
+    --input-text: #ffa07a;
+    --input-border: #400;
+    --input-focus: #f60;
+    --code-bg: #1a0a0a;
+    --code-text: #fa3;
+    --code-border: #4d0000;
+    --quote-bg: #200;
+    --quote-border: #f60;
+    --scroll-track: #0a0000;
+    --scroll-thumb: #600
+}
+
+[data-theme=light] {
+    --base: #fff;
+    --text: #111;
+    --surface: #f0f0f0;
+    --accent: #6200ea;
+    --nav-bg: #f9f9f9;
+    --nav-text: #111;
+    --header-bg: #eaeaea;
+    --footer-bg: #eaeaea;
+    --button-bg: #e0e0e0;
+    --button-hover: silver;
+    --input-bg: #fff;
+    --input-text: #000;
+    --input-border: #ccc;
+    --input-focus: #6200ea;
+    --code-bg: #f5f5f5;
+    --code-text: #333;
+    --code-border: #ddd;
+    --quote-bg: #f8f8f8;
+    --quote-border: #ccc;
+    --scroll-track: #f0f0f0;
+    --scroll-thumb: #ccc
+}
+
+[data-theme=neon-orange] {
+    --base: #0a0a0a;
+    --surface: #1a1a1a;
+    --text: #ffb347;
+    --accent: #ff6a00;
+    --nav-bg: #140000;
+    --nav-text: #fa0;
+    --header-bg: #1f0a00;
+    --footer-bg: #1f0a00;
+    --button-bg: #ff6a00;
+    --button-hover: #ff8533;
+    --input-bg: #1a0f00;
+    --input-text: #fc9;
+    --input-border: #ff6a00;
+    --input-focus: #f93;
+    --code-bg: #1b0d00;
+    --code-text: #fc9;
+    --code-border: #f50;
+    --quote-bg: #2a1400;
+    --quote-border: #fa0;
+    --scroll-track: #0a0a0a;
+    --scroll-thumb: #ff6a00;
+    --font-sans: "Rubik", sans-serif;
+    --font-mono: "Fira Code", monospace;
+    --radius: .5rem;
+    --shadow: 0 0 12px #ff6a0080;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-sm: .875rem
+}
+
+@property --tw-border-style {
+    syntax: "*";
+    inherits: false;
+    initial-value: solid
+}
+
+@property --tw-leading {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-font-weight {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-tracking {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-shadow {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0 0 #0000
+}
+
+@property --tw-shadow-color {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-shadow-alpha {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 100%
+}
+
+@property --tw-inset-shadow {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0 0 #0000
+}
+
+@property --tw-inset-shadow-color {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-inset-shadow-alpha {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 100%
+}
+
+@property --tw-ring-color {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-ring-shadow {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0 0 #0000
+}
+
+@property --tw-inset-ring-color {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-inset-ring-shadow {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0 0 #0000
+}
+
+@property --tw-ring-inset {
+    syntax: "*";
+    inherits: false
+}
+
+@property --tw-ring-offset-width {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0
+}
+
+@property --tw-ring-offset-color {
+    syntax: "*";
+    inherits: false;
+    initial-value: #fff
+}
+
+@property --tw-ring-offset-shadow {
+    syntax: "*";
+    inherits: false;
+    initial-value: 0 0 #0000
+}
+
+@property --tw-duration {
+    syntax: "*";
+    inherits: false
 }

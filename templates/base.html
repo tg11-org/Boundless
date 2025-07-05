@@ -1,76 +1,97 @@
 <!--
  Copyright (C) 2025 TG11
- 
+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as
  published by the Free Software Foundation, either version 3 of the
  License, or (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Affero General Public License for more details.
- 
+
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ request.COOKIES.theme|default:'dark' }}">
 <head>
     <meta charset="UTF-8">
-    <title>Boundless</title>
+    <title>{% block title %}Boundless{% endblock %}</title>
+
+    <!-- Theme Styles (all embedded into themes.css) -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/themes/dark.css' %}" id="theme-stylesheet">
+
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        function changeTheme(theme) {
-            document.getElementById('theme-stylesheet').href = '/static/css/themes/' + theme + '.css';
-            const theme = document.cookie.split('; ').find(row => row.startsWith('theme='));
-            if (theme) {
-                const themeName = theme.split('=')[1];
-                document.getElementById('theme-stylesheet').href = '/static/css/themes/' + themeName + '.css';
-            }
-        }
-    </script>
+
+    <!-- Optional: Extra web fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+    {% block head %}{% endblock %}
 </head>
-<body>
-    <header>
-        <h1>Welcome to Boundless {% if user.is_authenticated %}<span><b>{{ user.username }}</b></span>{% endif %}</h1>
-        <nav>
-            
-            <form action="{% url 'home' %}">
-              <button type="submit">Home</button>
-            </form>
-            <form action="{% url 'core:server_list' %}">
-              <button type="submit">Servers</button>
-            </form>
-            {% if user.is_authenticated %}
-                <form action="{% url 'core:profile' %}">
-                    <button type="submit">Profile</button>
-                </form>
-                <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-            {% else %}
-                <form action="{% url 'login' %}">
-                    <button type="submit">Login</button>
-                </form>
-                <form action="{% url 'signup' %}">
-                    <button type="submit">Sign Up</button>
-                </form>
-            {% endif %}
-          </nav>
-      
+<body class="transition-colors duration-300">
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<header class="bg-header-bg text-text p-4 shadow-md">
+    <h1 class="text-xl font-bold">
+        Welcome to Boundless
+        {% if user.is_authenticated %}
+            <span class="ml-2 font-semibold">{{ user.username }}</span>
+        {% endif %}
+    </h1>
 
-    <footer>
-        <p>&copy; {% now "Y" %} Boundless by TG11 </p>
-    </footer>
-    
+    <nav class="bg-nav-bg text-nav-text p-3 mt-4 flex gap-2 flex-wrap">
+        <form action="{% url 'home' %}"><button type="submit">Home</button></form>
+        <form action="{% url 'core:server_list' %}"><button type="submit">Servers</button></form>
+
+        {% if user.is_authenticated %}
+            <form action="{% url 'core:profile' %}"><button type="submit">Profile</button></form>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <form action="{% url 'login' %}"><button type="submit">Login</button></form>
+            <form action="{% url 'signup' %}"><button type="submit">Sign Up</button></form>
+        {% endif %}
+
+        <!-- Theme toggle buttons -->
+        <label for="theme-select" class="mr-2 font-medium">Theme:</label>
+        <select id="theme-select" onchange="setTheme(this.value)"
+          class="bg-input-bg text-input-text border border-input-border rounded px-2 py-1">
+          <option value="dark">🌑 Dark (Dark)</option>
+          <option value="halloween">🎃 Halloween (Dark)</option>
+          <option value="neon-orange">🟧 Neon Orange (Dark)</option>
+          <option value="light">🌞 Light (Light)</option>
+          <option value="foxgirl">🦊 Foxgirl (Light)</option>
+        </select>
+    </nav>
+</header>
+
+<main class="bg-surface text-text p-6 min-h-[60vh]">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-footer-bg text-text text-center p-4 text-sm">
+    &copy; {% now "Y" %} Boundless by TG11
+</footer>
+
+<script>
+    function setTheme(name) {
+        document.documentElement.setAttribute('data-theme', name);
+        localStorage.setItem('theme', name);
+        document.cookie = "theme=" + name + "; path=/";
+    }
+
+    // Restore saved theme on page load
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+    }
+</script>
+
+{% block scripts %}{% endblock %}
 </body>
 </html>
