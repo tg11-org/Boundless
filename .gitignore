@@ -1,0 +1,45 @@
+# Python bytecode
+*.py[cod]
+__pycache__/
+
+# Virtual environment
+venv/
+
+# Django stuff:
+*.log
+*.pot
+db.sqlite3
+media/
+staticfiles/
+
+# Migrations (optional)
+*/migrations/*.pyc
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Environment files
+.env
+.env.*
+
+# IDE and OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+scripts/cmd.bat
+scripts/
+
+# Node modules (if using for frontend)
+node_modules/
+
+# Coverage and testing
+.coverage
+*.cover
+coverage.xml
+nosetests.xml
+test-results.xml
+htmlcov/
+.tox/
+.pytest_cache/
+docs/
+docs/*

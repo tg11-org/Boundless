@@ -1,0 +1,358 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Copyright (C) 2025 TG11
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+:root {
+  /* Layout colors */
+  --base: #121212;
+  --surface: #1e1e1e;
+  --text: #dddddd;
+  --accent: #007acc;
+
+  /* UI Elements */
+  --header-bg: #1e1e1e;
+  --footer-bg: #1e1e1e;
+  --nav-bg: #1e1e1e;
+  --nav-text: #ffffff;
+  --button-bg: #333;
+  --button-hover: #555;
+
+  /* Inputs */
+  --input-bg: #1a1a1a;
+  --input-text: #ccc;
+  --input-border: #333;
+  --input-focus: #555;
+
+  /* Borders and Shadows */
+  --radius: 0.5rem;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  /* Typography */
+  --font-default: Arial, sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Merriweather', serif;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-sm: 0.875rem;
+
+  /* Code Block */
+  --code-bg: #1e1e1e;
+  --code-text: #d4d4d4;
+  --code-border: #3c3c3c;
+  --quote-bg: #1a1a1a;
+  --quote-border: #555;
+  --link-color: #4ea1d3;
+  --link-hover: #82d8ff;
+}
+
+/* ===== Root Theme Application ===== */
+html,
+body {
+  background-color: var(--base);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  transition: background-color 0.3s, color 0.3s;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  scrollbar-width: thin;
+}
+
+/* ===== Layout Sections ===== */
+header {
+  background-color: var(--header-bg);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+footer {
+  background-color: var(--footer-bg);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+nav {
+  background-color: var(--nav-bg);
+  color: var(--nav-text);
+}
+
+main {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+/* ===== Forms ===== */
+form {
+  background-color: transparent;
+  color: var(--text);
+}
+
+input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  font-family: inherit;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-focus);
+  outline: none;
+}
+
+/* ===== Buttons ===== */
+button {
+  background-color: var(--button-bg);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+/* ===== Markdown & Code Styling (Optional) ===== */
+pre,
+code {
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  font-family: var(--font-mono);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  overflow-x: auto;
+}
+
+blockquote {
+  background-color: var(--quote-bg);
+  border-left: 4px solid var(--quote-border);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  color: var(--text);
+}
+
+/* ===== Scrollbar (WebKit-specific) ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  border-radius: 10px;
+}
+
+[data-theme='dark'] {
+  /* Layout colors */
+  --base: #121212;
+  --surface: #1e1e1e;
+  --text: #dddddd;
+  --accent: #007acc;
+
+  /* UI Elements */
+  --header-bg: #1e1e1e;
+  --footer-bg: #1e1e1e;
+  --nav-bg: #1e1e1e;
+  --nav-text: #ffffff;
+  --button-bg: #333;
+  --button-hover: #555;
+
+  /* Inputs */
+  --input-bg: #1a1a1a;
+  --input-text: #ccc;
+  --input-border: #333;
+  --input-focus: #555;
+
+  /* Borders and Shadows */
+  --radius: 0.5rem;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  /* Typography */
+  --font-default: Arial, sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Merriweather', serif;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-sm: 0.875rem;
+
+  /* Code Block */
+  --code-bg: #1e1e1e;
+  --code-text: #d4d4d4;
+  --code-border: #3c3c3c;
+  --quote-bg: #1a1a1a;
+  --quote-border: #555;
+  --link-color: #4ea1d3;
+  --link-hover: #82d8ff;
+}
+
+[data-theme='foxgirl'] {
+  --base: #fff0f6;
+  --text: #5a3a4d;
+  --surface: #ffe6f0;
+  --accent: #ff88bb;
+
+  --nav-bg: #ffccdd;
+  --nav-text: #5a3a4d;
+  --header-bg: #ffd6e6;
+  --footer-bg: #ffd6e6;
+
+  --button-bg: #ffb3d1;
+  --button-hover: #ffa0c9;
+
+  --input-bg: #ffeaf1;
+  --input-text: #5a3a4d;
+  --input-border: #ff99c8;
+  --input-focus: #ff66a3;
+
+  --code-bg: #fff0fa;
+  --code-text: #7a2d58;
+  --code-border: #ffaad5;
+
+  --quote-bg: #ffe0eb;
+  --quote-border: #ff66a3;
+
+  --scroll-track: #ffeef4;
+  --scroll-thumb: #ff99cc;
+
+  --font-sans: 'Quicksand', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+
+  --radius: 0.75rem;
+  --shadow: 0 2px 8px rgba(255, 136, 187, 0.2);
+}
+
+[data-theme='halloween'] {
+  --base: #000000;
+  --text: #ff7518;
+  --surface: #1b1b1b;
+  --accent: #ff6600;
+
+  --nav-bg: #111;
+  --nav-text: #ff6600;
+  --header-bg: #220000;
+  --footer-bg: #220000;
+
+  --button-bg: #330000;
+  --button-hover: #550000;
+
+  --input-bg: #1a0a0a;
+  --input-text: #ffa07a;
+  --input-border: #440000;
+  --input-focus: #ff6600;
+
+  --code-bg: #1a0a0a;
+  --code-text: #ffaa33;
+  --code-border: #4d0000;
+
+  --quote-bg: #220000;
+  --quote-border: #ff6600;
+
+  --scroll-track: #0a0000;
+  --scroll-thumb: #660000;
+}
+
+[data-theme='light'] {
+  --base: #ffffff;
+  --text: #111111;
+  --surface: #f0f0f0;
+  --accent: #6200ea;
+
+  --nav-bg: #f9f9f9;
+  --nav-text: #111111;
+  --header-bg: #eaeaea;
+  --footer-bg: #eaeaea;
+
+  --button-bg: #e0e0e0;
+  --button-hover: #c0c0c0;
+
+  --input-bg: #ffffff;
+  --input-text: #000;
+  --input-border: #ccc;
+  --input-focus: #6200ea;
+
+  --code-bg: #f5f5f5;
+  --code-text: #333;
+  --code-border: #ddd;
+
+  --quote-bg: #f8f8f8;
+  --quote-border: #ccc;
+
+  --scroll-track: #f0f0f0;
+  --scroll-thumb: #ccc;
+}
+
+[data-theme='neon-orange'] {
+  --base: #0a0a0a;
+  --surface: #1a1a1a;
+  --text: #ffb347;
+  --accent: #ff6a00;
+
+  --nav-bg: #140000;
+  --nav-text: #ffaa00;
+  --header-bg: #1f0a00;
+  --footer-bg: #1f0a00;
+
+  --button-bg: #ff6a00;
+  --button-hover: #ff8533;
+
+  --input-bg: #1a0f00;
+  --input-text: #ffcc99;
+  --input-border: #ff6a00;
+  --input-focus: #ff9933;
+
+  --code-bg: #1b0d00;
+  --code-text: #ffcc99;
+  --code-border: #ff5500;
+
+  --quote-bg: #2a1400;
+  --quote-border: #ffaa00;
+
+  --scroll-track: #0a0a0a;
+  --scroll-thumb: #ff6a00;
+
+  --font-sans: 'Rubik', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+
+  --radius: 0.5rem;
+  --shadow: 0 0 12px rgba(255, 106, 0, 0.5);
+
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-sm: 0.875rem;
+}
+
+@source "../../../**/*.{html,py,js}";

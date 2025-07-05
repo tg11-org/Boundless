@@ -14,3 +14,8 @@
  limitations under the License.
 -->
 
+## Tools & Technologies
+
+This project uses:
+- Django (https://www.djangoproject.com/, BSD 3-Clause License)
+- Tailwind CSS (https://tailwindcss.com, MIT License)

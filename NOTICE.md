@@ -14,7 +14,13 @@ This project, **Boundless**, is licensed under the GNU Affero General Public Lic
 This project may include or interact with third-party libraries or APIs under separate licenses, including:
 
 - **OpenAI API**  Used for AI-generated content.
-  License: Commercial API Terms of Service  https://openai.com/policies/terms-of-use
+  License: Commercial
+  ToS/GL URL: [API Terms of Service](https://openai.com/policies/terms-of-use)
+  Main URL: [ChatGPT](https://openai.com/chatgpt/)
+- **Tailwind CSS**
+  License: MIT
+  Main URL: [Tailwind](https://tailwindcss.com)
+
 - [Add other libraries/frameworks/tools here as needed]
 
 You are responsible for complying with third-party license terms when modifying, distributing, or running this software.
