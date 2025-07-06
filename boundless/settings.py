@@ -184,3 +184,38 @@ CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
 
 TAILWIND_APP_NAME = "theme"
 TAILWIND_CLI_COMMAND = "npm run build:tailwind"
+
+
+class IgnoreVenvFilter:
+    def filter(self, record):
+        return not re.search(r"/venv/", record.pathname)
+
+
+import re
+from django.utils.log import DEFAULT_LOGGING
+
+LOGGING = {
+    **DEFAULT_LOGGING,
+    "filters": {
+        "ignore_venv": {
+            "()": IgnoreVenvFilter,
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "filters": ["ignore_venv"],
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
