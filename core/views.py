@@ -77,7 +77,7 @@ def send_friend_request(request, user_id):
     if from_user != to_user and not FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
         FriendRequest.objects.create(from_user=from_user, to_user=to_user)
 
-    return redirect("profile", user_id=to_user.id)
+    return redirect("core:profile", user_id=to_user.id)
 
 
 @login_required
