@@ -1,11 +1,23 @@
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractUser
+from django.templatetags.static import static
 from django.utils.crypto import get_random_string
 from django.db import models
-import uuid
+import uuid, random
 
 # Create your models here.
 
+SERVER_ICON_CHOICES = [
+    "media/server_icons/server-default-1.png",
+    "media/server_icons/server-default-2.png",
+    "media/server_icons/server-default-3.png",
+]
+
+USER_ICON_CHOICES = [
+    "media/avatars/user-default-1.png",
+    "media/avatars/user-default-2.png",
+    "media/avatars/user-default-3.png",
+]
 
 # === User Model ===
 class User(AbstractUser):
@@ -32,6 +44,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.display_name or self.username
+
+    @property
+    def avatar_or_random(self):
+        if self.avatar and hasattr(self.avatar, "url"):
+            return self.avatar.url
+        return static(random.choice(USER_ICON_CHOICES))
 
 
 class FriendRequest(models.Model):
@@ -78,6 +96,12 @@ class Server(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def icon_or_random(self):
+        if self.icon and hasattr(self.icon, "url"):
+            return self.icon.url
+        return static(random.choice(SERVER_ICON_CHOICES))
 
 
 class Category(models.Model):
