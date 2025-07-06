@@ -324,7 +324,7 @@ def edit_message(request, server_id, category_id, channel_id, message_id):
         message.save()
 
         return redirect(
-            "channel_detail",
+            "core:channel_detail",
             server_id=message.channel.server.id,
             category_id=message.channel.category.id,
             channel_id=message.channel.id,
@@ -366,7 +366,7 @@ def delete_message(request, message_id):
     message.save()
 
     return redirect(
-        "channel_detail",
+        "core:channel_detail",
         server_id=message.channel.server.id,
         category_id=message.channel.category.id,
         channel_id=message.channel.id,
