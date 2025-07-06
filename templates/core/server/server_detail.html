@@ -17,7 +17,7 @@
 
 {% extends 'base.html' %}
 {% block content %}
-{% if server.icon %}<img src="{{ server.icon.url }}" alt="{{ server.name }} Icon" style='width: 2vw; height: 2vw;'><h1>{{ server.name }}</h1>{% endif %}
+<img src="{{ server.icon_or_random }}" alt="{{ server.name }} Icon" style='width: 2vw; height: 2vw;'><h1>{{ server.name }}</h1>
 <p>{{ server.description }}</p>
 <a href="{% url 'core:create_category' server_id=server.id %}"><button>Create Category</button></a>
 
