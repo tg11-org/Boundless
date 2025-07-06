@@ -71,9 +71,13 @@ def join_server(request, code):
 
 @login_required
 def send_friend_request(request, user_id):
+    from_user = request.user
     to_user = get_object_or_404(User, id=user_id)
-    FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
-    return redirect("core:profile", user_id=to_user.id)
+
+    if from_user != to_user and not FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+        FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+
+    return redirect("profile", user_id=to_user.id)
 
 
 @login_required

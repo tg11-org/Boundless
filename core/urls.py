@@ -45,6 +45,7 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     path("profile/<uuid:user_id>/", views.profile, name="profile"),
+    path("profile/<uuid:user_id>/send_request/", views.send_friend_request, name="send_friend_request"),
     path("profile/<uuid:user_id>/requests/", views.friend_requests, name="friend_requests"),
     path("profile/<uuid:user_id>/friends/", views.friends_list, name="friends_list"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
