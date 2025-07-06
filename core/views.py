@@ -101,8 +101,7 @@ def decline_friend_request(request, request_id):
 def profile(request, user_id=None):
     if user_id:
         try:
-            uuid_obj = uuid.UUID(user_id, version=4)
-            user_profile = User.objects.get(id=uuid_obj)
+            user_profile = User.objects.get(id=user_id)
         except (ValueError, ValidationError, User.DoesNotExist):
             return render(request, "core/errors/user_not_found.html", status=404)
     else:
