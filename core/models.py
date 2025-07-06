@@ -49,7 +49,7 @@ class User(AbstractUser):
     def avatar_or_random(self):
         if self.avatar and hasattr(self.avatar, "url"):
             return self.avatar.url
-        return static(random.choice(USER_ICON_CHOICES))
+        return random.choice(USER_ICON_CHOICES)
 
 
 class FriendRequest(models.Model):
@@ -101,7 +101,7 @@ class Server(models.Model):
     def icon_or_random(self):
         if self.icon and hasattr(self.icon, "url"):
             return self.icon.url
-        return static(random.choice(SERVER_ICON_CHOICES))
+        return random.choice(SERVER_ICON_CHOICES)
 
 
 class Category(models.Model):
