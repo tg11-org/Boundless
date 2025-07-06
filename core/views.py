@@ -267,7 +267,7 @@ def channel_detail(request, server_id, category_id, channel_id):
             sender=request.user, channel=channel, content=request.POST["content"]
         )
         return redirect(
-            "channel_detail",
+            "core:channel_detail",
             server_id=server.id,
             category_id=category.id,
             channel_id=channel.id,
