@@ -8,15 +8,15 @@ import uuid, random
 # Create your models here.
 
 SERVER_ICON_CHOICES = [
-    "media/server_icons/server-default-1.png",
-    "media/server_icons/server-default-2.png",
-    "media/server_icons/server-default-3.png",
+    "/media/server_icons/server-default-1.png",
+    "/media/server_icons/server-default-2.png",
+    "/media/server_icons/server-default-3.png",
 ]
 
 USER_ICON_CHOICES = [
-    "media/avatars/user-default-1.png",
-    "media/avatars/user-default-2.png",
-    "media/avatars/user-default-3.png",
+    "/media/avatars/user-default-1.png",
+    "/media/avatars/user-default-2.png",
+    "/media/avatars/user-default-3.png",
 ]
 
 # === User Model ===
