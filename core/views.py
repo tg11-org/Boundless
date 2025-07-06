@@ -98,11 +98,9 @@ def decline_friend_request(request, request_id):
 
 
 @login_required
-def profile(request, **kwargs):
-    user_id = kwargs.get("user_id")
+def profile(request, user_id=None):
     if user_id:
         try:
-            # Validate UUID first!
             uuid_obj = uuid.UUID(user_id, version=4)
             user_profile = User.objects.get(id=uuid_obj)
         except (ValueError, ValidationError, User.DoesNotExist):
