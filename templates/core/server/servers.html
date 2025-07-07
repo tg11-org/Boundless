@@ -25,7 +25,7 @@
     <div class="server-card">
       <img src="{{ server.icon_or_random }}" class="server-icon">
       <div class="server-info">
-        <h3>{{ server.name }}{% if server.owner == user %}<span class="owner-tag">You Own This</span> endif %}</h3>
+        <h3>{{ server.name }}{% if server.owner == user %}<span class="owner-tag">You Own This</span>{% endif %}</h3>
         <p>{{ server.description }}</p>
         <a href="{% url 'core:server_detail' server.id %}" class="view-btn">View</a>
       </div>
