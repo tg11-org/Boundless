@@ -33,7 +33,7 @@
     <ul id="messages">
       {% for message in messages %}
         <li>
-          <strong><img src="{{ message.sender.avatar_or_random }}" class="avatar"><a href="{% url 'core:profile' user_id=message.sender.id %}">{{ message.sender.username }}</a></strong>: {{ message.content }}
+          <strong><img src="{{ message.sender.avatar_or_random }}" style="width: 16px; height: 16px;" class="avatar"><a href="{% url 'core:profile' user_id=message.sender.id %}">{{ message.sender.username }}</a></strong>: {{ message.content }}
           {% if message.sender == user %}
             <a href="{% url 'core:edit_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}"><i class="fas fa-edit"></i> [Edit]</a>
             <a href="{% url 'core:delete_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}"><i class="fas fa-trash"></i> [Delete]</a>
