@@ -23,7 +23,7 @@
 <div class="server-grid">
   {% for server in servers %}
     <div class="server-card">
-      <img src="{{ server.icon_or_random }}" class="server-icon">
+      <img src="{{ server.icon_or_random }}" class="server-icon" style="width:64px; height:64px;">
       <div class="server-info">
         <h3>{{ server.name }}{% if server.owner == user %}<span class="owner-tag">You Own This</span>{% endif %}</h3>
         <p>{{ server.description }}</p>
