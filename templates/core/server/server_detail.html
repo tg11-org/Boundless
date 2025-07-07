@@ -26,7 +26,7 @@
   <h2>{{ server.name }}</h2>
   {% for category in server.categories.all %}
     <details>
-      <summary>{{ category.name }}</summary>
+      <summary><a href="{% url 'core:category_detail' server_id=server.id category_id=category.id %}">{{ category.name }}</a></summary>
       <ul>
         {% for channel in category.channels.all %}
           <li>
