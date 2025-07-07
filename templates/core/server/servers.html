@@ -20,13 +20,13 @@
 <a href="{% url 'core:create_server' %}"><button>Create Server</button></a> <a href="{% url 'core:discover_community' %}"><button>Community (Public) Servers</button></a>
 <h2>Servers List</h2>
 
-<div class="server-grid">
+<div class="server-grid flex items-start gap-4 rounded p-4 shadow hover:bg-zinc-700 transition">
   {% for server in servers %}
     <div class="server-card">
-      <img src="{{ server.icon_or_random }}" class="server-icon" style="width:64px; height:64px;">
-      <div class="server-info">
-        <h3>{% if server.owner == user %}<i class="fa-solid fa-crown"></i>{% endif %}<u><a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</u></a></h3>
-        <p>{{ server.description }}</p>
+      <img src="{{ server.icon_or_random }}" class="server-icon w-12 h-12 rounded object-cover border border-zinc-600" style="width:64px; height:64px;">
+      <div class="server-info flex items-center gap-2">
+        <h1 class="font-semibold hover:underline">{% if server.owner == user %}<i class="fa-solid fa-crown"></i>{% endif %}<a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</a></h1>
+        <p class="text-sm mt-1">{{ server.description }}</p>
       </div>
     </div>
   {% endfor %}
