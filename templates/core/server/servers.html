@@ -26,7 +26,9 @@
       <img src="{{ server.icon_or_random }}" class="server-icon w-12 h-12 rounded object-cover border border-zinc-600" style="width:64px; height:64px;">
       <div class="server-info flex items-center gap-2">
         <h1 class="font-semibold hover:underline">{% if server.owner == user %}<i class="fa-solid fa-crown"></i>{% endif %}<a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</a></h1>
+        <br>
         <p class="text-sm mt-1">{{ server.description }}</p>
+        <br>
       </div>
     </div>
   {% endfor %}
