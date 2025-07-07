@@ -924,4 +924,46 @@ blockquote {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
-    opacity: 1; }
+    opacity: 1;
+}
+
+.server-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.server-card {
+    background: #1f1f1f;
+    border: 1px solid #333;
+    padding: 1rem;
+    width: 300px;
+    border-radius: 8px;
+}
+
+.server-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+.server-info {
+    margin-left: 1rem;
+}
+
+.owner-tag {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: gold;
+    font-weight: bold;
+}
+
+.view-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: #444;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+}

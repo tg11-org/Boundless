@@ -19,11 +19,17 @@
 {% block content %}
 <a href="{% url 'core:create_server' %}"><button>Create Server</button></a> <a href="{% url 'core:discover_community' %}"><button>Community (Public) Servers</button></a>
 <h2>Servers List</h2>
-<ul>
+
+<div class="server-grid">
   {% for server in servers %}
-    <li>
-      <a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</a>
-    </li>
+    <div class="server-card">
+      <img src="{{ server.icon_or_random }}" class="server-icon">
+      <div class="server-info">
+        <h3>{{ server.name }}{% if server.owner == user %}<span class="owner-tag">You Own This</span> endif %}</h3>
+        <p>{{ server.description }}</p>
+        <a href="{% url 'core:server_detail' server.id %}" class="view-btn">View</a>
+      </div>
+    </div>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}
