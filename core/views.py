@@ -359,7 +359,7 @@ def message_history(request, server_id, category_id, channel_id, message_id):
 
 
 @login_required
-def delete_message(request, message_id):
+def delete_message(request, server_id, category_id, channel_id, message_id):
     message = get_object_or_404(Message, id=message_id, sender=request.user)
 
     # Soft delete: mark as deleted, keep in DB
@@ -368,9 +368,9 @@ def delete_message(request, message_id):
 
     return redirect(
         "core:channel_detail",
-        server_id=message.channel.server.id,
-        category_id=message.channel.category.id,
-        channel_id=message.channel.id,
+        server_id=server_id,
+        category_id=category_id,
+        channel_id=channel_id,
     )
 
 
