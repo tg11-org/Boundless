@@ -55,8 +55,9 @@
 
     <!-- Add the WebSocket script here -->
     <script>
+      const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
       const chatSocket = new WebSocket(
-        'ws://' + window.location.host +
+        wsScheme + '://' + window.location.host +
         '/ws/servers/{{ server.id }}/{{ category.id }}/{{ channel.id }}/'
       );
 
