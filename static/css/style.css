@@ -644,7 +644,7 @@ blockquote {
     background-color: var(--scroll-thumb);
     border-radius: 10px
 }
-
+/* ~ ####   DARK THEMES    #### ~ */
 [data-theme=dark] {
     --base: #121212;
     --surface: #1e1e1e;
@@ -677,34 +677,6 @@ blockquote {
     --link-hover: #82d8ff
 }
 
-[data-theme=foxgirl] {
-    --base: #fff0f6;
-    --text: #5a3a4d;
-    --surface: #ffe6f0;
-    --accent: #f8b;
-    --nav-bg: #fcd;
-    --nav-text: #5a3a4d;
-    --header-bg: #ffd6e6;
-    --footer-bg: #ffd6e6;
-    --button-bg: #ffb3d1;
-    --button-hover: #ffa0c9;
-    --input-bg: #ffeaf1;
-    --input-text: #5a3a4d;
-    --input-border: #ff99c8;
-    --input-focus: #ff66a3;
-    --code-bg: #fff0fa;
-    --code-text: #7a2d58;
-    --code-border: #ffaad5;
-    --quote-bg: #ffe0eb;
-    --quote-border: #ff66a3;
-    --scroll-track: #ffeef4;
-    --scroll-thumb: #f9c;
-    --font-sans: "Quicksand", sans-serif;
-    --font-mono: "Fira Code", monospace;
-    --radius: .75rem;
-    --shadow: 0 2px 8px #f8b3
-}
-
 [data-theme=halloween] {
     --base: #000;
     --text: #ff7518;
@@ -727,30 +699,6 @@ blockquote {
     --quote-border: #f60;
     --scroll-track: #0a0000;
     --scroll-thumb: #600
-}
-
-[data-theme=light] {
-    --base: #fff;
-    --text: #111;
-    --surface: #f0f0f0;
-    --accent: #6200ea;
-    --nav-bg: #f9f9f9;
-    --nav-text: #111;
-    --header-bg: #eaeaea;
-    --footer-bg: #eaeaea;
-    --button-bg: #e0e0e0;
-    --button-hover: silver;
-    --input-bg: #fff;
-    --input-text: #000;
-    --input-border: #ccc;
-    --input-focus: #6200ea;
-    --code-bg: #f5f5f5;
-    --code-text: #333;
-    --code-border: #ddd;
-    --quote-bg: #f8f8f8;
-    --quote-border: #ccc;
-    --scroll-track: #f0f0f0;
-    --scroll-thumb: #ccc
 }
 
 [data-theme=neon-orange] {
@@ -782,6 +730,60 @@ blockquote {
     --font-size-base: 1rem;
     --font-size-lg: 1.25rem;
     --font-size-sm: .875rem
+}
+
+/* ^ ####   LIGHT THEMES    #### ^ */
+
+[data-theme=light] {
+    --base: #fff;
+    --text: #111;
+    --surface: #f0f0f0;
+    --accent: #6200ea;
+    --nav-bg: #f9f9f9;
+    --nav-text: #111;
+    --header-bg: #eaeaea;
+    --footer-bg: #eaeaea;
+    --button-bg: #e0e0e0;
+    --button-hover: silver;
+    --input-bg: #fff;
+    --input-text: #000;
+    --input-border: #ccc;
+    --input-focus: #6200ea;
+    --code-bg: #f5f5f5;
+    --code-text: #333;
+    --code-border: #ddd;
+    --quote-bg: #f8f8f8;
+    --quote-border: #ccc;
+    --scroll-track: #f0f0f0;
+    --scroll-thumb: #ccc
+}
+
+[data-theme=foxgirl] {
+    --base: #fff0f6;
+    --text: #5a3a4d;
+    --surface: #ffe6f0;
+    --accent: #f8b;
+    --nav-bg: #fcd;
+    --nav-text: #5a3a4d;
+    --header-bg: #ffd6e6;
+    --footer-bg: #ffd6e6;
+    --button-bg: #ffb3d1;
+    --button-hover: #ffa0c9;
+    --input-bg: #ffeaf1;
+    --input-text: #5a3a4d;
+    --input-border: #ff99c8;
+    --input-focus: #ff66a3;
+    --code-bg: #fff0fa;
+    --code-text: #7a2d58;
+    --code-border: #ffaad5;
+    --quote-bg: #ffe0eb;
+    --quote-border: #ff66a3;
+    --scroll-track: #ffeef4;
+    --scroll-thumb: #f9c;
+    --font-sans: "Quicksand", sans-serif;
+    --font-mono: "Fira Code", monospace;
+    --radius: .75rem;
+    --shadow: 0 2px 8px #f8b3
 }
 
 @property --tw-border-style {

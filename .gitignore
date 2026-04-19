@@ -43,3 +43,6 @@ htmlcov/
 .pytest_cache/
 docs/
 docs/*
+bin/
+bin/*
+*.code-workspace
