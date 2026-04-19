@@ -16,21 +16,38 @@
 -->
 
 {% extends 'base.html' %}
+{% block title %}My Servers - Boundless{% endblock %}
 {% block content %}
-<a href="{% url 'core:create_server' %}"><button>Create Server</button></a> <a href="{% url 'core:discover_community' %}"><button>Community (Public) Servers</button></a>
-<h2>Servers List</h2>
+<div class="flex items-center justify-between mb-2" style="flex-wrap: wrap; gap: 0.5rem;">
+  <h2 style="margin: 0; font-size: 1.2rem;"><i class="fas fa-server"></i> My Servers</h2>
+  <div class="flex gap-1">
+    <a href="{% url 'core:create_server' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create Server</a>
+    <a href="{% url 'core:discover_community' %}" class="btn btn-sm"><i class="fas fa-compass"></i> Discover</a>
+  </div>
+</div>
 
-<div class="server-grid flex items-start gap-4 rounded p-4 shadow hover:bg-zinc-700 transition">
+{% if servers %}
+<div class="server-grid">
   {% for server in servers %}
-    <div class="server-card">
-      <img src="{{ server.icon_or_random }}" class="server-icon w-12 h-12 rounded object-cover border border-zinc-600" style="width:64px; height:64px;">
-      <div class="server-info flex items-center gap-2">
-        <h1 class="font-semibold hover:underline">{% if server.owner == user %}<i class="fa-solid fa-crown"></i>{% endif %}<a href="{% url 'core:server_detail' server.id %}">{{ server.name }}</a></h1>
-        <br>
-        <p class="text-sm mt-1">{{ server.description }}</p>
-        <br>
+    <a href="{% url 'core:server_detail' server.id %}" class="server-card" style="text-decoration: none;">
+      <img src="{{ server.icon_or_random }}" class="server-icon" alt="{{ server.name }}">
+      <div class="server-info">
+        <h3>
+          {% if server.owner == user %}<i class="fas fa-crown owner-crown"></i>{% endif %}
+          {{ server.name }}
+        </h3>
+        <p>{{ server.description|default:"No description" }}</p>
       </div>
-    </div>
+    </a>
   {% endfor %}
 </div>
+{% else %}
+<div class="card" style="text-align: center; margin-top: 1rem;">
+  <p class="text-muted">You haven't joined any servers yet.</p>
+  <div class="flex gap-1 mt-1" style="justify-content: center;">
+    <a href="{% url 'core:create_server' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Create One</a>
+    <a href="{% url 'core:discover_community' %}" class="btn"><i class="fas fa-compass"></i> Discover Servers</a>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

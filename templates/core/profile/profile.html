@@ -1,80 +1,74 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}{% if user.id == user_profile.id %}My Profile{% else %}{{ user_profile.username }}{% endif %} - Boundless{% endblock %}
 
 {% block content %}
-{% if user.id == user_profile.id %}
-  <h2>My Profile</h2>
-{% else %}
-  <h2>{{ user_profile.username }}'s Profile</h2>
-{% endif %}
-<ul>
-  <li><strong>Username:</strong> {{ user_profile.username }}</li>
-  <li><strong>Display Name:</strong> {{ user_profile.display_name }}</li>
-  <li><strong>UUID:</strong> {{ user_profile.id }}</li>
-  {% if user_profile.show_legal_name %}
-    <li><strong>First Name:</strong> {{ user_profile.first_name }}</li>
-    <li><strong>Last Name:</strong> {{ user_profile.last_name }}</li>
-  {% endif %}
-  {% if user_profile.show_email %}
-    <li><strong>Email:</strong> {{ user_profile.email }}</li>
-  {% endif %}
-  {% if user_profile.show_phone_number %}
-    <li><strong>Phone Number:</strong> {{ user_profile.phone_number }}</li>
-  {% endif %}
-  {% if user_profile.show_bio %}
-    <li><strong>Bio:</strong> {{ user_profile.bio }}</li>
-  {% endif %}
-  {% if user_profile.show_avatar %}
-    <li>
-      <strong>Avatar:</strong><br>
-      {% if user.avatar %}
-        <img src="{{ user_profile.avatar.url }}" alt="Avatar" style="max-width: 200px;">
-      {% else %}
-        No avatar uploaded.
+<div class="profile-card" style="max-width: 600px; margin: 2rem auto;">
+  <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem;">
+    {% if user_profile.show_avatar and user_profile.avatar %}
+      <img src="{{ user_profile.avatar.url }}" alt="{{ user_profile.username }}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+    {% else %}
+      <img src="{{ user_profile.avatar_or_random }}" alt="{{ user_profile.username }}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+    {% endif %}
+    <div>
+      <h2 style="margin: 0;">{% if user.id == user_profile.id %}My Profile{% else %}{{ user_profile.display_name|default:user_profile.username }}{% endif %}</h2>
+      <span class="text-muted">@{{ user_profile.username }}</span>
+    </div>
+  </div>
+
+  <div style="display: grid; gap: 0.5rem; font-size: 0.9rem;">
+    <div><strong>Display Name:</strong> {{ user_profile.display_name|default:"—" }}</div>
+    <div class="text-muted" style="font-size: 0.78rem;">UUID: {{ user_profile.id }}</div>
+    {% if user_profile.show_legal_name %}
+      <div><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</div>
+    {% endif %}
+    {% if user_profile.show_email %}
+      <div><strong>Email:</strong> {{ user_profile.email }}</div>
+    {% endif %}
+    {% if user_profile.show_phone_number %}
+      <div><strong>Phone:</strong> {{ user_profile.phone_number }}</div>
+    {% endif %}
+    {% if user_profile.show_bio and user_profile.bio %}
+      <div style="margin-top: 0.5rem; padding: 0.75rem; background: var(--bg1); border-radius: var(--radius);">{{ user_profile.bio }}</div>
+    {% endif %}
+  </div>
+
+  <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap;">
+    {% if user.id == user_profile.id %}
+      <a href="{% url 'core:edit_profile' %}" class="btn btn-primary"><i class="fas fa-pen"></i> Edit Profile</a>
+      <a href="{% url 'core:friend_requests' %}" class="btn"><i class="fas fa-user-plus"></i> Friend Requests</a>
+      <a href="{% url 'core:friends_list' %}" class="btn"><i class="fas fa-users"></i> Friends</a>
+      <a href="{% url 'core:parental_controls' %}" class="btn"><i class="fas fa-shield-halved"></i> Parental Controls</a>
+    {% else %}
+      {% if user_profile not in user.friends.all %}
+        <form action="{% url 'core:send_friend_request' user_id=user_profile.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Send Friend Request</button>
+        </form>
       {% endif %}
-    </li>
-  {% endif %}
-</ul>
+    {% endif %}
+  </div>
+</div>
+
 {% if user.id != user_profile.id %}
-  <h3>Shared Servers:</h3>
-  <ul>
-    {% for server in shared_servers %}
-      <li>{{ server.name }}</li>
-    {% endfor %}
-  </ul>
-
-  <h3>Shared Friends:</h3>
-  <ul>
-    {% for friend in shared_friends %}
-      <li>{{ friend.username }}</li>
-    {% endfor %}
-  </ul>
+  {% if shared_servers %}
+    <div class="card" style="max-width: 600px; margin: 1.5rem auto;">
+      <h3><i class="fas fa-server"></i> Shared Servers</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+        {% for server in shared_servers %}
+          <span style="background: var(--bg1); padding: 0.3rem 0.75rem; border-radius: var(--radius); font-size: 0.85rem;">{{ server.name }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  {% if shared_friends %}
+    <div class="card" style="max-width: 600px; margin: 1rem auto;">
+      <h3><i class="fas fa-users"></i> Shared Friends</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+        {% for friend in shared_friends %}
+          <a href="{% url 'core:profile' user_id=friend.id %}" style="background: var(--bg1); padding: 0.3rem 0.75rem; border-radius: var(--radius); font-size: 0.85rem;">{{ friend.username }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 {% endif %}
-{% if user != user_profile and not user_profile in user.friends.all %}
-  <form action="{% url 'core:send_friend_request' user_id=user_profile.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Send Friend Request</button>
-  </form>
-{% endif %}
-{% if user.id == user_profile.id %}
-  <a href="{% url 'core:edit_profile' %}">Edit Profile</a>
-{% endif %}
-
-<a href="{% url 'home' %}">Back to Home</a>
 {% endblock %}

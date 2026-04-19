@@ -1,41 +1,26 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}Friend Requests - Boundless{% endblock %}
 
 {% block content %}
-<h2>Friend Requests</h2>
-<ul>
+<div class="card" style="max-width: 560px; margin: 2rem auto;">
+  <h2><i class="fas fa-user-plus"></i> Friend Requests</h2>
   {% for request in friend_requests %}
-    <li>
-      <a href="{% url 'core:profile' user_id=request.from_user.id %}">
-        {{ request.from_user.username }}
-      </a>
-      <form action="{% url 'core:accept_friend_request' request.id %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Accept</button>
-      </form>
-      <form action="{% url 'core:decline_friend_request' request.id %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Decline</button>
-      </form>
-    </li>
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--bg1); border-radius: var(--radius); margin-bottom: 0.5rem;">
+      <a href="{% url 'core:profile' user_id=request.from_user.id %}" style="font-weight: 600;">{{ request.from_user.username }}</a>
+      <div style="display: flex; gap: 0.4rem;">
+        <form action="{% url 'core:accept_friend_request' request.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Accept</button>
+        </form>
+        <form action="{% url 'core:decline_friend_request' request.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-xmark"></i> Decline</button>
+        </form>
+      </div>
+    </div>
   {% empty %}
-    <li>No pending requests.</li>
+    <p class="text-muted" style="text-align: center; padding: 1rem 0;">No pending friend requests.</p>
   {% endfor %}
-</ul>
+  <a href="{% url 'core:profile' %}" class="btn" style="margin-top: 1rem;"><i class="fas fa-arrow-left"></i> Back to Profile</a>
+</div>
 {% endblock %}

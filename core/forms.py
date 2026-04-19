@@ -28,6 +28,11 @@ class CustomUserCreationForm(UserCreationForm):
     display_name = forms.CharField(max_length=100, required=False)
     bio = forms.CharField(widget=forms.Textarea, required=False)
     avatar = forms.ImageField(required=False)
+    date_of_birth = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date"}),
+        help_text="Used to determine age-appropriate content. Optional.",
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -41,6 +46,7 @@ class CustomUserCreationForm(UserCreationForm):
             "display_name",
             "bio",
             "avatar",
+            "date_of_birth",
         )
 
 
@@ -60,6 +66,39 @@ class ProfileEditForm(forms.ModelForm):
             "show_phone_number",
             "show_bio",
             "show_avatar",
+        ]
+
+
+class ParentalControlsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "is_minor_account",
+            "parental_controls_enabled",
+            "guardian_email",
+            "minor_birthdate_precision",
+            "minor_age_range",
+            "minor_age_years",
+            "minor_birth_year",
+            "minor_birth_month",
+            "minor_birth_day",
+        ]
+        widgets = {
+            "minor_age_years": forms.NumberInput(attrs={"min": 0, "max": 17}),
+            "minor_birth_year": forms.NumberInput(attrs={"min": 2000, "max": 2030}),
+            "minor_birth_month": forms.NumberInput(attrs={"min": 1, "max": 12}),
+            "minor_birth_day": forms.NumberInput(attrs={"min": 1, "max": 31}),
+        }
+
+
+class GuardianSettingsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "guardian_allows_nsfw",
+            "guardian_allows_16plus",
+            "guardian_locks_profile",
+            "guardian_restrict_dms",
         ]
 
 

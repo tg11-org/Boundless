@@ -1,32 +1,24 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}Assign Role - {{ role.name }} - Boundless{% endblock %}
 
 {% block content %}
-  <h2>Assign Role: {{ role.name }} ({{ server.name }})</h2>
+<div class="card" style="max-width: 480px; margin: 2rem auto;">
+  <h2><i class="fas fa-user-plus"></i> Assign Role: <span style="color: {{ role.color }};">{{ role.name }}</span></h2>
+  <p class="text-muted">Server: {{ server.name }}</p>
   <form method="post">
     {% csrf_token %}
-    <select name="user_id">
-      {% for member in members %}
-        <option value="{{ member.id }}">{{ member.username }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit">Assign</button>
+    <div class="form-group">
+      <label for="user_id">Select Member</label>
+      <select name="user_id" id="user_id">
+        {% for member in members %}
+          <option value="{{ member.id }}">{{ member.display_name|default:member.username }} (@{{ member.username }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Assign</button>
+      <a href="{% url 'core:roles_list' server_id=server.id %}" class="btn">Cancel</a>
+    </div>
   </form>
-  <a href="{% url 'core:roles_list' server_id=server.id %}">Back to Roles</a>
+</div>
 {% endblock %}

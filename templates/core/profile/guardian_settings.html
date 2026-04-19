@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Guardian Settings - Boundless{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 560px; margin: 2rem auto;">
+  <h2><i class="fas fa-user-shield"></i> Guardian Settings</h2>
+
+  {% if user.guardian_email %}
+    <div style="padding: 0.75rem; background: var(--bg1); border-radius: var(--radius); margin-bottom: 1rem; font-size: 0.9rem;">
+      <strong>Guardian Email:</strong> {{ user.guardian_email }}
+      {% if user.guardian_email_verified %}
+        <span style="color: var(--success);"><i class="fas fa-check-circle"></i> Verified</span>
+      {% else %}
+        <span class="text-muted"><i class="fas fa-clock"></i> Pending verification</span>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<small class="text-muted">{{ field.help_text }}</small>{% endif %}
+        {% for error in field.errors %}<small style="color: var(--danger);">{{ error }}</small>{% endfor %}
+      </div>
+    {% endfor %}
+    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Save</button>
+      <a href="{% url 'core:parental_controls' %}" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

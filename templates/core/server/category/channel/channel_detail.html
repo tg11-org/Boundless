@@ -16,72 +16,139 @@
 -->
 
 {% extends 'base.html' %}
+{% block title %}#{{ channel.name }} - {{ server.name }} - Boundless{% endblock %}
 
 {% block content %}
-  <h2>
-    <a href="{% url 'core:server_detail' server_id=server.id %}"><b>{{ server.name }}</b></a> -
-    <a href="{% url 'core:category_detail' server_id=server.id category_id=category.id %}"><b>{{ category.name }}</b></a> -
-    {{ channel.name }}
-  </h2>
-  {% if channel.channel_type == "voice" %}
-    <iframe
-      src="http://172.105.155.247:8080/{{ channel.id }}"
-      style="width: 100%; height: 500px; border: 0;"
-      allow="camera; microphone; fullscreen; display-capture"
-    ></iframe>
-  {% else %}
-    <ul id="messages">
-      {% for message in messages %}
-        {% if not message.deleted or user.is_superuser or user.is_staff %}
-          <li>
-            <strong><img src="{{ message.sender.avatar_or_random }}" style="width: 16px; height: 16px;" class="avatar"><a href="{% url 'core:profile' user_id=message.sender.id %}">{{ message.sender.username }}</a></strong>: {{ message.content }}
-            {% if message.sender == user %}
-              <a href="{% url 'core:edit_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}"><i class="fas fa-edit"></i></a>
-              <a href="{% url 'core:delete_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}"><i class="fas fa-trash"></i></a>
+<div class="server-layout">
+  <aside class="server-sidebar">
+    <div class="server-sidebar-header">
+      <img src="{{ server.icon_or_random }}" alt="{{ server.name }}">
+      <h2>{{ server.name }}</h2>
+    </div>
+    {% for cat in server.categories.all %}
+      <details class="sidebar-section" {% if cat.id == category.id %}open{% endif %}>
+        <summary>{{ cat.name }}</summary>
+        <ul class="sidebar-channel-list">
+          {% for ch in cat.channels.all %}
+            <li>
+              <a href="{% url 'core:channel_detail' server_id=server.id category_id=cat.id channel_id=ch.id %}"
+                 class="sidebar-channel {% if ch.id == channel.id %}active{% endif %}">
+                <span class="channel-icon">
+                  {% if ch.channel_type == "voice" %}<i class="fas fa-volume-up"></i>
+                  {% elif ch.channel_type == "video" %}<i class="fas fa-video"></i>
+                  {% elif ch.channel_type == "announcement" %}<i class="fas fa-bullhorn"></i>
+                  {% else %}<i class="fas fa-hashtag"></i>{% endif %}
+                </span>
+                {{ ch.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </details>
+    {% endfor %}
+  </aside>
+
+  <div class="server-content">
+    <div style="display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem;">
+      <span style="font-size: 1.1rem; color: var(--text2);">
+        {% if channel.channel_type == "voice" %}<i class="fas fa-volume-up"></i>
+        {% elif channel.channel_type == "video" %}<i class="fas fa-video"></i>
+        {% else %}<i class="fas fa-hashtag"></i>{% endif %}
+      </span>
+      <h2 style="font-size: 1rem; margin: 0;">{{ channel.name }}</h2>
+      <span class="text-muted" style="font-size: 0.78rem;">
+        in <a href="{% url 'core:server_detail' server_id=server.id %}">{{ server.name }}</a>
+        / <a href="{% url 'core:category_detail' server_id=server.id category_id=category.id %}">{{ category.name }}</a>
+      </span>
+    </div>
+
+    {% if channel.channel_type == "voice" %}
+      <div class="card">
+        <iframe
+          src="http://172.105.155.247:8080/{{ channel.id }}"
+          style="width: 100%; height: 500px; border: 0; border-radius: var(--radius);"
+          allow="camera; microphone; fullscreen; display-capture"
+        ></iframe>
+      </div>
+    {% else %}
+      <div class="chat-container">
+        <div class="chat-messages" id="messages">
+          {% for message in messages %}
+            {% if not message.deleted or user.is_superuser or user.is_staff %}
+              <div class="chat-message">
+                <img src="{{ message.sender.avatar_or_random }}" class="chat-avatar" alt="{{ message.sender.username }}">
+                <div class="chat-bubble">
+                  <div class="chat-meta">
+                    <a href="{% url 'core:profile' user_id=message.sender.id %}">{{ message.sender.display_name|default:message.sender.username }}</a>
+                    <span class="chat-time">{{ message.created_at|date:"M d, Y H:i" }}</span>
+                    {% if message.edited_at %}
+                      <span class="text-muted" style="font-size: 0.68rem;">(edited)</span>
+                    {% endif %}
+                  </div>
+                  {% if message.deleted %}
+                    <p class="chat-deleted"><i class="fas fa-trash"></i> This message was deleted</p>
+                  {% else %}
+                    <p class="chat-content">{{ message.content }}</p>
+                  {% endif %}
+                  {% if message.sender == user and not message.deleted %}
+                    <span class="chat-actions">
+                      <a href="{% url 'core:edit_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}" title="Edit"><i class="fas fa-pen"></i></a>
+                      <a href="{% url 'core:delete_message' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}" title="Delete"><i class="fas fa-trash"></i></a>
+                      <a href="{% url 'core:message_history' server_id=server.id category_id=category.id channel_id=channel.id message_id=message.id %}" title="History"><i class="fas fa-clock-rotate-left"></i></a>
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
             {% endif %}
-            {% if message.deleted %}
-              <span style="color: {{ theme.deleted_color }};">(Deleted)</span>
-            {% endif %}
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+          {% empty %}
+            <p class="text-muted" style="text-align: center; padding: 2rem 0;">No messages yet. Be the first to say something!</p>
+          {% endfor %}
+        </div>
 
-    <form id="message-form" method="post">
-      {% csrf_token %}
-      <input type="text" name="content" placeholder="Type your message...">
-      <button type="submit">Send</button>
-    </form>
+        <form id="message-form" method="post" class="chat-input-bar">
+          {% csrf_token %}
+          <input type="text" name="content" placeholder="Message #{{ channel.name }}" autocomplete="off" required>
+          <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+        </form>
+      </div>
 
-    <!-- Add the WebSocket script here -->
-    <script>
-      const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
-      const chatSocket = new WebSocket(
-        wsScheme + '://' + window.location.host +
-        '/ws/servers/{{ server.id }}/{{ category.id }}/{{ channel.id }}/'
-      );
+      <script>
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const chatSocket = new WebSocket(
+          wsScheme + '://' + window.location.host +
+          '/ws/servers/{{ server.id }}/{{ category.id }}/{{ channel.id }}/'
+        );
 
-      chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        const messagesDiv = document.getElementById('messages');
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${data.user}</strong>: ${data.message}`;
-        messagesDiv.appendChild(li);
-      };
+        chatSocket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+          const messagesDiv = document.getElementById('messages');
+          const msgHtml = document.createElement('div');
+          msgHtml.className = 'chat-message';
+          msgHtml.innerHTML = '<div class="chat-bubble"><div class="chat-meta"><strong>' +
+            data.user + '</strong> <span class="chat-time">just now</span></div>' +
+            '<p class="chat-content">' + data.message.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p></div>';
+          messagesDiv.appendChild(msgHtml);
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        };
 
-      chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-      };
+        chatSocket.onclose = function(e) {
+          console.error('Chat socket closed unexpectedly');
+        };
 
-      document.getElementById('message-form').onsubmit = function(e) {
-        e.preventDefault();
-        const messageInputDom = document.querySelector('input[name="content"]');
-        const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-          'message': message
-        }));
-        messageInputDom.value = '';
-      };
-    </script>
-  {% endif %}
+        document.getElementById('message-form').onsubmit = function(e) {
+          e.preventDefault();
+          const input = document.querySelector('input[name="content"]');
+          const message = input.value.trim();
+          if (!message) return;
+          chatSocket.send(JSON.stringify({ 'message': message }));
+          input.value = '';
+        };
+
+        // Auto-scroll to bottom on load
+        var msgs = document.getElementById('messages');
+        if (msgs) msgs.scrollTop = msgs.scrollHeight;
+      </script>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

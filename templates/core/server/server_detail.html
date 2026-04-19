@@ -16,40 +16,72 @@
 -->
 
 {% extends 'base.html' %}
+{% block title %}{{ server.name }} - Boundless{% endblock %}
 {% block content %}
-<img src="{{ server.icon_or_random }}" alt="{{ server.name }} Icon" style='width: 2vw; height: 2vw;'><h1>{{ server.name }}</h1>
-<p>{{ server.description }}</p>
-<a href="{% url 'core:create_category' server_id=server.id %}"><button>Create Category</button></a>
+<div class="server-layout">
+  <aside class="server-sidebar">
+    <div class="server-sidebar-header">
+      <img src="{{ server.icon_or_random }}" alt="{{ server.name }}">
+      <div>
+        <h2>{{ server.name }}</h2>
+        {% if server.owner == user %}
+          <div style="display: flex; gap: 0.3rem; margin-top: 0.2rem;">
+            <a href="{% url 'core:server_settings' server_id=server.id %}" class="btn btn-sm" style="font-size: 0.68rem; padding: 0.15rem 0.4rem;"><i class="fas fa-cog"></i></a>
+            <a href="{% url 'core:roles_list' server_id=server.id %}" class="btn btn-sm" style="font-size: 0.68rem; padding: 0.15rem 0.4rem;"><i class="fas fa-shield-alt"></i></a>
+            <a href="{% url 'core:create_category' server_id=server.id %}" class="btn btn-sm" style="font-size: 0.68rem; padding: 0.15rem 0.4rem;"><i class="fas fa-folder-plus"></i></a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
 
+    {% for category in server.categories.all %}
+      <details class="sidebar-section" open>
+        <summary>{{ category.name }}</summary>
+        <ul class="sidebar-channel-list">
+          {% for channel in category.channels.all %}
+            <li>
+              <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}" class="sidebar-channel">
+                <span class="channel-icon">
+                  {% if channel.channel_type == "voice" %}<i class="fas fa-volume-up"></i>
+                  {% elif channel.channel_type == "video" %}<i class="fas fa-video"></i>
+                  {% elif channel.channel_type == "announcement" %}<i class="fas fa-bullhorn"></i>
+                  {% elif channel.channel_type == "forum" %}<i class="fas fa-comments"></i>
+                  {% elif channel.channel_type == "media" %}<i class="fas fa-image"></i>
+                  {% else %}<i class="fas fa-hashtag"></i>{% endif %}
+                </span>
+                {{ channel.name }}
+              </a>
+            </li>
+          {% endfor %}
+          {% if server.owner == user %}
+            <li>
+              <a href="{% url 'core:create_channel' server_id=server.id category_id=category.id %}" class="sidebar-channel" style="color: var(--accent); font-style: italic;">
+                <span class="channel-icon"><i class="fas fa-plus"></i></span> Add channel
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </details>
+    {% endfor %}
 
-<div class="sidebar">
-  <h2>{{ server.name }}</h2>
-  {% for category in server.categories.all %}
-    <details>
-      <summary><a href="{% url 'core:category_detail' server_id=server.id category_id=category.id %}">{{ category.name }}</a></summary>
-      <ul>
-        {% for channel in category.channels.all %}
-          <li>
-            <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
-              {{ channel.name }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </details>
-  {% endfor %}
+    <div style="padding: 0.5rem 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--border);">
+      <p class="text-muted" style="font-size: 0.75rem;">
+        <i class="fas fa-link"></i> Join link:
+        <code style="font-size: 0.7rem; word-break: break-all;">{{ server.get_join_link }}</code>
+      </p>
+    </div>
+  </aside>
+
+  <div class="server-content">
+    <div class="card">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">
+        <i class="fas fa-info-circle" style="color: var(--accent);"></i> {{ server.name }}
+      </h2>
+      <p class="text-muted" style="margin: 0;">{{ server.description|default:"No description set." }}</p>
+    </div>
+    <p class="text-muted mt-1" style="font-size: 0.82rem;">
+      Select a channel from the sidebar to start chatting.
+    </p>
+  </div>
 </div>
-
-
-
-
-<a href="{% url 'core:server_list' %}">Back to Servers</a>
 {% endblock %}
-
-{% if user in server.members.all %}
-  <form method="post">
-    {% csrf_token %}
-    <textarea name="content"></textarea>
-    <button type="submit">Send</button>
-  </form>
-{% endif %}

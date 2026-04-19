@@ -17,8 +17,53 @@
 
 {% extends 'base.html' %}
 
+{% block title %}Boundless - Home{% endblock %}
+
 {% block content %}
-<h2>Welcome to Boundless!</h2>
-<p>This is the home page.</p>
-<p>Soon, you will be able to join servers, send messages, add friends and so much more!</p>
+<div class="card" style="max-width: 700px; margin: 2rem auto; text-align: center;">
+  <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">
+    <i class="fas fa-infinity" style="color: var(--accent);"></i> Welcome to Boundless
+  </h2>
+  <p class="text-muted" style="margin-bottom: 1.25rem;">
+    A free, open-source, federation-ready alternative to Discord.<br>
+    No microtransactions. No tracking. Just communication.
+  </p>
+
+  {% if user.is_authenticated %}
+    <div class="flex gap-1" style="justify-content: center; flex-wrap: wrap;">
+      <a href="{% url 'core:server_list' %}" class="btn btn-primary"><i class="fas fa-server"></i> My Servers</a>
+      <a href="{% url 'core:discover_community' %}" class="btn"><i class="fas fa-compass"></i> Discover Servers</a>
+      <a href="{% url 'core:create_server' %}" class="btn"><i class="fas fa-plus"></i> Create Server</a>
+      <a href="{% url 'core:profile' %}" class="btn"><i class="fas fa-user"></i> My Profile</a>
+    </div>
+  {% else %}
+    <div class="flex gap-1" style="justify-content: center; flex-wrap: wrap;">
+      <a href="{% url 'login' %}" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="{% url 'signup' %}" class="btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; max-width: 900px; margin: 0 auto;">
+  <div class="card" style="text-align: center;">
+    <i class="fas fa-comments" style="font-size: 1.5rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+    <h3 style="font-size: 0.95rem;">Real-time Chat</h3>
+    <p class="text-muted" style="font-size: 0.82rem;">WebSocket-powered messaging with channels and categories.</p>
+  </div>
+  <div class="card" style="text-align: center;">
+    <i class="fas fa-shield-halved" style="font-size: 1.5rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+    <h3 style="font-size: 0.95rem;">Parental Controls</h3>
+    <p class="text-muted" style="font-size: 0.82rem;">Age-appropriate content filtering with guardian management.</p>
+  </div>
+  <div class="card" style="text-align: center;">
+    <i class="fas fa-palette" style="font-size: 1.5rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+    <h3 style="font-size: 0.95rem;">10+ Themes</h3>
+    <p class="text-muted" style="font-size: 0.82rem;">Dark, Light, Cyberpunk, Forest and more. Plus accessibility options.</p>
+  </div>
+  <div class="card" style="text-align: center;">
+    <i class="fas fa-globe" style="font-size: 1.5rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+    <h3 style="font-size: 0.95rem;">Federation Ready</h3>
+    <p class="text-muted" style="font-size: 0.82rem;">Designed for a decentralized future. Your data, your rules.</p>
+  </div>
+</div>
 {% endblock %}

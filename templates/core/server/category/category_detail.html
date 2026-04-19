@@ -1,37 +1,32 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}{{ category.name }} - {{ server.name }} - Boundless{% endblock %}
 
 {% block content %}
-  <h2>{{ category.name }} ({{ server.name }})</h2>
-  <a href="{% url 'core:create_channel' server_id=server.id category_id=category.id %}"><button>Create Channel</button></a>
+<div class="card" style="max-width: 600px; margin: 2rem auto;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+    <div>
+      <h2 style="margin: 0;"><i class="fas fa-folder"></i> {{ category.name }}</h2>
+      <span class="text-muted">in {{ server.name }}</span>
+    </div>
+    <a href="{% url 'core:create_channel' server_id=server.id category_id=category.id %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Channel</a>
+  </div>
 
-  <h3>Channels:</h3>
-  <ul>
-    {% for channel in channels %}
-      <li>
-        <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}">
-          {{ channel.name }} ( {{ channel.channel_type }} )
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+  {% for channel in channels %}
+    <a href="{% url 'core:channel_detail' server_id=server.id category_id=category.id channel_id=channel.id %}" style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem; background: var(--bg1); border-radius: var(--radius); margin-bottom: 0.4rem; text-decoration: none; color: var(--text);">
+      <span style="color: var(--text2);">
+        {% if channel.channel_type == "voice" %}<i class="fas fa-volume-up"></i>
+        {% elif channel.channel_type == "video" %}<i class="fas fa-video"></i>
+        {% elif channel.channel_type == "announcement" %}<i class="fas fa-bullhorn"></i>
+        {% elif channel.channel_type == "forum" %}<i class="fas fa-comments"></i>
+        {% else %}<i class="fas fa-hashtag"></i>{% endif %}
+      </span>
+      <span style="font-weight: 600;">{{ channel.name }}</span>
+      <span class="text-muted" style="font-size: 0.78rem;">{{ channel.channel_type }}</span>
+    </a>
+  {% empty %}
+    <p class="text-muted" style="text-align: center; padding: 1rem 0;">No channels yet. Create one to get started!</p>
+  {% endfor %}
 
-  <a href="{% url 'core:server_detail' server_id=server.id %}">Back to Server</a>
-  <a href="{% url 'core:category_detail' server_id=server.id category_id=category.id %}">Back to Category</b></a>
+  <a href="{% url 'core:server_detail' server_id=server.id %}" class="btn" style="margin-top: 1rem;"><i class="fas fa-arrow-left"></i> Back to Server</a>
+</div>
 {% endblock %}

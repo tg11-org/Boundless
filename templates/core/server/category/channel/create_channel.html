@@ -1,37 +1,28 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}Create Channel - {{ server.name }} - Boundless{% endblock %}
 
 {% block content %}
-  <h2>Create Channel</h2>
+<div class="card" style="max-width: 480px; margin: 2rem auto;">
+  <h2><i class="fas fa-plus"></i> Create Channel</h2>
   <form method="post">
     {% csrf_token %}
-    <label>Name:</label><input type="text" name="name" required><br>
-    <label>Category:</label>
-    <select name="category_id">
-      {% for cat in categories %}
-        <option value="{{ cat.id }}"
-        {% if cat.id|stringformat:"s" == selected_category|stringformat:"s" %}selected{% endif %}
-        >{{ cat.name }}</option>
-      {% endfor %}
-    </select><br>
-    <label>Type:</label>
-    <select name="channel_type" required>
+    <div class="form-group">
+      <label for="name">Channel Name</label>
+      <input type="text" name="name" id="name" placeholder="general" required>
+    </div>
+    <div class="form-group">
+      <label for="category_id">Category</label>
+      <select name="category_id" id="category_id">
+        {% for cat in categories %}
+          <option value="{{ cat.id }}"
+            {% if cat.id|stringformat:"s" == selected_category|stringformat:"s" %}selected{% endif %}
+          >{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="channel_type">Channel Type</label>
+      <select name="channel_type" id="channel_type" required>
         <option value="text">Text</option>
         <option value="voice">Voice</option>
         <option value="video">Video</option>
@@ -41,9 +32,13 @@
         <option value="event">Event</option>
         <option value="support">Support</option>
         <option value="ticket">Ticket</option>
-    </select><br>
-    <button type="submit">Create Channel</button>
+      </select>
+    </div>
+    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Create</button>
+      <a href="{% url 'core:server_detail' server_id=server.id %}" class="btn">Cancel</a>
+    </div>
   </form>
-  <a href="{% url 'core:server_detail' server_id=server.id %}">Back to Server</a>
+</div>
 {% endblock %}
 

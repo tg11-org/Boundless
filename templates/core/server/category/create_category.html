@@ -1,28 +1,22 @@
-<!--
- Copyright (C) 2025 TG11
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as
- published by the Free Software Foundation, either version 3 of the
- License, or (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
- 
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 {% extends 'base.html' %}
+{% block title %}Create Category - {{ server.name }} - Boundless{% endblock %}
 
 {% block content %}
-  <h2>Create Category in {{ server.name }}</h2>
+<div class="card" style="max-width: 480px; margin: 2rem auto;">
+  <h2><i class="fas fa-folder-plus"></i> Create Category in {{ server.name }}</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% for error in field.errors %}<small style="color: var(--danger);">{{ error }}</small>{% endfor %}
+      </div>
+    {% endfor %}
+    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Create</button>
+      <a href="{% url 'core:server_detail' server_id=server.id %}" class="btn">Cancel</a>
+    </div>
   </form>
-  <a href="{% url 'core:server_detail' server_id=server.id %}">Back to Server</a>
+</div>
 {% endblock %}

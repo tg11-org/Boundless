@@ -16,18 +16,29 @@
 -->
 
 {% extends 'base.html' %}
+{% block title %}Discover Servers - Boundless{% endblock %}
 
 {% block content %}
-  <h2>Discover Community Servers</h2>
-  <ul>
-    {% for server in servers %}
-      <li>
-        {{ server.name }} -
-        <a href="{% url 'core:join_server' code=server.join_code %}">Join</a>
-      </li>
-    {% empty %}
-      <li>No community servers to discover!</li>
-    {% endfor %}
-  </ul>
-  <a href="{% url 'core:server_list' %}">Back to My Servers</a>
+<div class="flex items-center justify-between mb-2" style="flex-wrap: wrap; gap: 0.5rem;">
+  <h2 style="margin: 0; font-size: 1.2rem;"><i class="fas fa-compass"></i> Discover Community Servers</h2>
+  <a href="{% url 'core:server_list' %}" class="btn btn-sm"><i class="fas fa-arrow-left"></i> My Servers</a>
+</div>
+
+{% if servers %}
+<div class="discover-grid">
+  {% for server in servers %}
+    <div class="discover-card">
+      <div>
+        <strong>{{ server.name }}</strong>
+        <p class="text-muted" style="font-size: 0.82rem; margin: 0.2rem 0 0;">{{ server.description|default:"No description"|truncatewords:12 }}</p>
+      </div>
+      <a href="{% url 'core:join_server' code=server.join_code %}" class="btn btn-primary btn-sm"><i class="fas fa-sign-in-alt"></i> Join</a>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align: center; margin-top: 1rem;">
+  <p class="text-muted">No community servers to discover right now.</p>
+</div>
+{% endif %}
 {% endblock %}

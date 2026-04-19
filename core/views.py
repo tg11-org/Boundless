@@ -1,14 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory, Role
+from .models import Server, Channel, Message, User, FriendRequest, Category, MessageEditHistory, Role, GuardianEmailVerificationToken
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, ProfileEditForm, ServerSettingsForm
+from .forms import CustomUserCreationForm, ProfileEditForm, ServerSettingsForm, ParentalControlsForm, GuardianSettingsForm
 from django.http import HttpResponseForbidden
 import uuid
 from django.core.exceptions import ValidationError, PermissionDenied
 import logging
 from django import forms
 from django.utils import timezone
+from django.contrib import messages as django_messages
+from datetime import date, timedelta
+import secrets
 logger = logging.getLogger(__name__)
 
 # Create your views here.
@@ -153,11 +156,24 @@ def signup(request):
             user.bio = form.cleaned_data.get("bio")
             if form.cleaned_data.get("avatar"):
                 user.avatar = form.cleaned_data.get("avatar")
+            dob = form.cleaned_data.get("date_of_birth")
+            if dob:
+                user.date_of_birth = dob
+                today = date.today()
+                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+                if age < 18:
+                    user.is_minor_account = True
+                    user.minor_birthdate_precision = "full_date"
+                    user.minor_birth_year = dob.year
+                    user.minor_birth_month = dob.month
+                    user.minor_birth_day = dob.day
             user.save()
 
             from django.contrib.auth import login
 
             login(request, user)
+            if user.is_minor_account:
+                django_messages.info(request, "Your account has been flagged as a minor account. You can set up parental controls in your profile settings.")
             return redirect("home")
     else:
         form = CustomUserCreationForm()
@@ -482,3 +498,98 @@ def server_settings(request, server_id):
     return render(
         request, "core/server/server_settings.html", {"server": server, "form": form}
     )
+
+
+# === Parental Controls ===
+
+@login_required
+def parental_controls(request):
+    user = request.user
+    if request.method == "POST":
+        form = ParentalControlsForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            # If guardian email changed, send verification
+            if form.cleaned_data.get("guardian_email") and not user.guardian_email_verified:
+                _send_guardian_verification(request, user)
+                django_messages.success(request, "Parental controls updated. A verification email has been sent to the guardian.")
+            else:
+                django_messages.success(request, "Parental controls updated.")
+            return redirect("core:parental_controls")
+    else:
+        form = ParentalControlsForm(instance=user)
+    return render(request, "core/profile/parental_controls.html", {"form": form})
+
+
+@login_required
+def guardian_settings(request):
+    user = request.user
+    if not user.is_minor_account or not user.parental_controls_enabled:
+        django_messages.warning(request, "Parental controls are not enabled on this account.")
+        return redirect("core:profile")
+
+    if request.method == "POST":
+        if not user.guardian_email_verified:
+            django_messages.error(request, "Guardian email must be verified before changing settings.")
+            return redirect("core:guardian_settings")
+        form = GuardianSettingsForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            django_messages.success(request, "Guardian settings updated.")
+            return redirect("core:guardian_settings")
+    else:
+        form = GuardianSettingsForm(instance=user)
+    return render(request, "core/profile/guardian_settings.html", {"form": form, "user_profile": user})
+
+
+def verify_guardian_email(request, token):
+    try:
+        verification = GuardianEmailVerificationToken.objects.get(token=token)
+    except GuardianEmailVerificationToken.DoesNotExist:
+        django_messages.error(request, "Invalid or expired verification link.")
+        return redirect("home")
+
+    if not verification.is_usable:
+        django_messages.error(request, "This verification link has expired or has already been used.")
+        return redirect("home")
+
+    verification.used_at = timezone.now()
+    verification.save()
+
+    user = verification.user
+    user.guardian_email_verified_at = timezone.now()
+    user.save(update_fields=["guardian_email_verified_at"])
+
+    django_messages.success(request, "Guardian email verified successfully.")
+    return redirect("home")
+
+
+def _send_guardian_verification(request, user):
+    token = secrets.token_urlsafe(32)
+    GuardianEmailVerificationToken.objects.create(
+        user=user,
+        guardian_email=user.guardian_email,
+        token=token,
+        expires_at=timezone.now() + timedelta(hours=24),
+    )
+    from django.core.mail import send_mail
+    from django.conf import settings as django_settings
+    from django.urls import reverse
+
+    verify_url = request.build_absolute_uri(
+        reverse("core:verify_guardian_email", kwargs={"token": token})
+    )
+    try:
+        send_mail(
+            subject="Boundless - Guardian Email Verification",
+            message=(
+                f"A Boundless account (@{user.username}) added this address as a guardian contact.\n\n"
+                f"Verify this guardian email by visiting: {verify_url}\n\n"
+                "If you did not expect this, you can ignore this email."
+            ),
+            from_email=getattr(django_settings, "DEFAULT_FROM_EMAIL", None),
+            recipient_list=[user.guardian_email],
+            fail_silently=False,
+        )
+    except Exception:
+        logger.exception("Failed to send guardian verification email for user=%s", user.id)

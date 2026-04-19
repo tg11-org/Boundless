@@ -16,82 +16,191 @@
 -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ request.COOKIES.theme|default:'dark' }}">
+<html lang="en" data-theme="dark" data-contrast="normal" data-font="default" data-text-size="normal" data-spacing="normal" data-motion="normal" data-links="normal">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Boundless{% endblock %}</title>
-
-    <!-- Theme Styles (all embedded into themes.css) -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- Optional: Extra web fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        var t = localStorage.getItem("bl-theme") || "dark";
+        var c = localStorage.getItem("bl-contrast") || "normal";
+        var f = localStorage.getItem("bl-font") || "default";
+        var s = localStorage.getItem("bl-text-size") || "normal";
+        var p = localStorage.getItem("bl-spacing") || "normal";
+        var m = localStorage.getItem("bl-motion") || "normal";
+        var l = localStorage.getItem("bl-links") || "normal";
+        var resolved = t === "auto" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : t;
+        document.documentElement.setAttribute("data-theme", resolved);
+        document.documentElement.setAttribute("data-theme-pref", t);
+        document.documentElement.setAttribute("data-contrast", c);
+        document.documentElement.setAttribute("data-font", f);
+        document.documentElement.setAttribute("data-text-size", s);
+        document.documentElement.setAttribute("data-spacing", p);
+        document.documentElement.setAttribute("data-motion", m);
+        document.documentElement.setAttribute("data-links", l);
+      })();
+    </script>
     {% block head %}{% endblock %}
 </head>
-<body class="transition-colors duration-300">
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<header class="bg-header-bg text-text p-4 shadow-md">
-    <h1 class="text-xl font-bold">
-        Welcome to Boundless
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <a href="{% url 'home' %}" class="header-brand">
+          <i class="fas fa-infinity"></i> Boundless
+        </a>
         {% if user.is_authenticated %}
-            <span class="ml-2 font-semibold">{{ user.username }}</span>
+          <span class="header-user">
+            <i class="fas fa-circle" style="color: #4caf50; font-size: 0.5rem; vertical-align: middle;"></i>
+            {{ user.display_name|default:user.username }}
+          </span>
         {% endif %}
-    </h1>
+      </div>
 
-    <nav class="bg-nav-bg text-nav-text p-3 mt-4 flex gap-2 flex-wrap">
-        <form action="{% url 'home' %}"><button type="submit">Home</button></form>
-        <form action="{% url 'core:server_list' %}"><button type="submit">Servers</button></form>
-
+      <nav class="site-nav">
+        <a href="{% url 'home' %}" class="nav-btn"><i class="fas fa-home"></i> Home</a>
         {% if user.is_authenticated %}
-            <form action="{% url 'core:profile' %}"><button type="submit">Profile</button></form>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
+          <a href="{% url 'core:server_list' %}" class="nav-btn"><i class="fas fa-server"></i> Servers</a>
+          <a href="{% url 'core:discover_community' %}" class="nav-btn"><i class="fas fa-compass"></i> Discover</a>
+          <a href="{% url 'core:profile' %}" class="nav-btn"><i class="fas fa-user"></i> Profile</a>
+          <a href="{% url 'core:friend_requests' user_id=user.id %}" class="nav-btn"><i class="fas fa-user-friends"></i> Friends</a>
+          <span class="nav-sep"></span>
+          <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+          </form>
         {% else %}
-            <form action="{% url 'login' %}"><button type="submit">Login</button></form>
-            <form action="{% url 'signup' %}"><button type="submit">Sign Up</button></form>
+          <a href="{% url 'login' %}" class="nav-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+          <a href="{% url 'signup' %}" class="nav-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
         {% endif %}
+      </nav>
 
-        <!-- Theme toggle buttons -->
-        <label for="theme-select" class="mr-2 font-medium">Theme:</label>
-        <select id="theme-select" onchange="setTheme(this.value)"
-          class="bg-input-bg text-input-text border border-input-border rounded px-2 py-1">
-          <option value="dark">🌑 Dark (Dark)</option>
-          <option value="halloween">🎃 Halloween (Dark)</option>
-          <option value="neon-orange">🟧 Neon Orange (Dark)</option>
-          <option value="light">🌞 Light (Light)</option>
-          <option value="foxgirl">🦊 Foxgirl (Light)</option>
-        </select>
-    </nav>
-</header>
+      <div class="a11y-bar" role="group" aria-label="Display preferences">
+        <label class="theme-select-wrap" for="theme-chooser">
+          <i class="fas fa-palette" style="font-size: 0.72rem;"></i>
+          <select class="theme-select" id="theme-chooser" aria-label="Choose theme">
+            <option value="auto">Auto</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="foxgirl">Foxgirl</option>
+            <option value="halloween">Halloween</option>
+            <option value="neon-orange">Neon Orange</option>
+            <option value="cyberpunk">Cyberpunk</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+            <option value="ocean">Ocean</option>
+            <option value="rose">Rose</option>
+          </select>
+        </label>
+        <button class="a11y-btn" id="contrast-btn" type="button">Contrast</button>
+        <button class="a11y-btn" id="font-btn" type="button">Font</button>
+        <button class="a11y-btn" id="text-size-btn" type="button">Text size</button>
+        <button class="a11y-btn" id="spacing-btn" type="button">Spacing</button>
+        <button class="a11y-btn" id="motion-btn" type="button">Motion</button>
+        <button class="a11y-btn" id="links-btn" type="button">Links</button>
+      </div>
+      <span id="a11y-live" class="sr-only" aria-live="polite"></span>
+    </div>
+  </header>
 
-<main class="bg-surface text-text p-6 min-h-[60vh]">
+  <main id="main-content" tabindex="-1">
+    {% if messages %}
+      <ul class="messages-list">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     {% block content %}{% endblock %}
-</main>
+  </main>
 
-<footer class="bg-footer-bg text-text text-center p-4 text-sm">
+  <footer class="site-footer">
+    <a href="{% url 'home' %}">Home</a> &middot;
+    {% if user.is_authenticated %}
+      <a href="{% url 'core:profile' %}">Profile</a> &middot;
+      <a href="{% url 'core:parental_controls' %}">Parental Controls</a> &middot;
+    {% endif %}
     &copy; {% now "Y" %} Boundless by TG11
-</footer>
+  </footer>
 
-<script>
-    function setTheme(name) {
-        document.documentElement.setAttribute('data-theme', name);
-        localStorage.setItem('theme', name);
-        document.cookie = "theme=" + name + "; path=/";
+  <script>
+  (function(){
+    var root = document.documentElement;
+    var sel = document.getElementById("theme-chooser");
+    var cBtn = document.getElementById("contrast-btn");
+    var fBtn = document.getElementById("font-btn");
+    var textSizeBtn = document.getElementById("text-size-btn");
+    var spacingBtn = document.getElementById("spacing-btn");
+    var motionBtn = document.getElementById("motion-btn");
+    var linksBtn = document.getElementById("links-btn");
+    var live = document.getElementById("a11y-live");
+
+    function resolveTheme(pref){
+      if(pref === "auto") return window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light";
+      return pref;
     }
-
-    // Restore saved theme on page load
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
+    function loadOpenDyslexic(){
+      if(!document.getElementById("od-css")){
+        var l = document.createElement("link");
+        l.id = "od-css"; l.rel = "stylesheet";
+        l.href = "https://fonts.cdnfonts.com/css/open-dyslexic";
+        document.head.appendChild(l);
+      }
     }
-</script>
+    function announce(m){ live.textContent = ""; setTimeout(function(){ live.textContent = m; }, 50); }
+    function apply(){
+      var pref = root.getAttribute("data-theme-pref") || "dark";
+      var contrast = root.getAttribute("data-contrast") || "normal";
+      var font = root.getAttribute("data-font") || "default";
+      var textSize = root.getAttribute("data-text-size") || "normal";
+      var spacing = root.getAttribute("data-spacing") || "normal";
+      var motion = root.getAttribute("data-motion") || "normal";
+      var links = root.getAttribute("data-links") || "normal";
+      root.setAttribute("data-theme", resolveTheme(pref));
+      if (sel) sel.value = pref;
+      if (cBtn) cBtn.textContent = contrast === "high" ? "Contrast: High" : "Contrast";
+      if (fBtn) fBtn.textContent = font === "dyslexic" ? "Font: Dyslexic" : "Font";
+      if (textSizeBtn) textSizeBtn.textContent = textSize === "normal" ? "Text size" : "Text size: " + textSize;
+      if (spacingBtn) spacingBtn.textContent = spacing === "relaxed" ? "Spacing: Relaxed" : "Spacing";
+      if (motionBtn) motionBtn.textContent = motion === "reduced" ? "Motion: Reduced" : "Motion";
+      if (linksBtn) linksBtn.textContent = links === "underlined" ? "Links: Underlined" : "Links";
+      if (font === "dyslexic") loadOpenDyslexic();
+      document.cookie = "theme=" + resolveTheme(pref) + "; path=/; SameSite=Lax";
+    }
+    if (sel) {
+      sel.addEventListener("change", function(){
+        root.setAttribute("data-theme-pref", sel.value);
+        localStorage.setItem("bl-theme", sel.value);
+        apply(); announce("Theme: " + sel.value);
+      });
+    }
+    function toggleA11y(key, attr, values, label) {
+      var cur = root.getAttribute(attr) || values[0];
+      var idx = values.indexOf(cur);
+      var next = values[(idx + 1) % values.length];
+      root.setAttribute(attr, next);
+      localStorage.setItem(key, next);
+      apply(); announce(label + ": " + next);
+    }
+    if (cBtn) cBtn.addEventListener("click", function(){ toggleA11y("bl-contrast","data-contrast",["normal","high"],"Contrast"); });
+    if (fBtn) fBtn.addEventListener("click", function(){ toggleA11y("bl-font","data-font",["default","dyslexic"],"Font"); });
+    if (textSizeBtn) textSizeBtn.addEventListener("click", function(){ toggleA11y("bl-text-size","data-text-size",["normal","large","larger"],"Text size"); });
+    if (spacingBtn) spacingBtn.addEventListener("click", function(){ toggleA11y("bl-spacing","data-spacing",["normal","relaxed"],"Spacing"); });
+    if (motionBtn) motionBtn.addEventListener("click", function(){ toggleA11y("bl-motion","data-motion",["normal","reduced"],"Motion"); });
+    if (linksBtn) linksBtn.addEventListener("click", function(){ toggleA11y("bl-links","data-links",["normal","underlined"],"Links"); });
+    window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change", function(){
+      if ((root.getAttribute("data-theme-pref") || "dark") === "auto") apply();
+    });
+    apply();
+  })();
+  </script>
 
-{% block scripts %}{% endblock %}
+  {% block scripts %}{% endblock %}
 </body>
 </html>

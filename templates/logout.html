@@ -16,7 +16,12 @@
 -->
 
 {% extends 'base.html' %}
+{% block title %}Logged Out - Boundless{% endblock %}
 {% block content %}
-  <h2>You have been logged out.</h2>
-  <p><a href="{% url 'home' %}">Return to home</a></p>
+<div class="card" style="max-width: 420px; margin: 2rem auto; text-align: center;">
+  <i class="fas fa-sign-out-alt" style="font-size: 2rem; color: var(--accent); margin-bottom: 0.75rem;"></i>
+  <h2 style="font-size: 1.2rem;">You've been logged out</h2>
+  <p class="text-muted" style="margin-bottom: 1rem;">Thanks for using Boundless. See you next time!</p>
+  <a href="{% url 'home' %}" class="btn btn-primary">Return to Home</a>
+</div>
 {% endblock %}
