@@ -1,0 +1,52 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${BIND_IP:-127.0.0.1}:${WEB_PORT:-8000}:8000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./:/app
+      - media_data:/app/media
+
+  db:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-boundless}
+      POSTGRES_USER: ${DATABASE_USER:-boundless}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-boundless}
+    restart: unless-stopped
+    ports:
+      - "${BIND_IP:-127.0.0.1}:${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-boundless} -d ${DATABASE_NAME:-boundless}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "${BIND_IP:-127.0.0.1}:${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+  media_data:

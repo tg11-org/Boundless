@@ -20,39 +20,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9@^c7tcc)ay*h!izku431i74k$=z-z$q)925-5xox6z_ar9xuq'
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-9@^c7tcc)ay*h!izku431i74k$=z-z$q)925-5xox6z_ar9xuq",
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.getenv("ALLOWED_HOSTS", "*").split(",")
+    if h.strip()
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://boundless.onl",
-    "https://boundless.onl",
-    "http://www.boundless.onl",
-    "https://www.boundless.onl",
-    "http://boundless.cv",
-    "https://boundless.cv",
-    "http://www.boundless.cv",
-    "https://www.boundless.cv",
-    "http://boundless.ing",
-    "https://boundless.ing",
-    "http://www.boundless.ing",
-    "https://www.boundless.ing",
-    "http://boundless.website",
-    "https://boundless.website",
-    "http://www.boundless.website",
-    "https://www.boundless.website",
-    "http://boundless.tg11.org",
-    "https://boundless.tg11.org",
-    "http://www.boundless.tg11.org",
-    "https://www.boundless.tg11.org",
-    "http://172.105.155.247",
-    "https://172.105.155.247",
-    "http://2603:9001:ff00:3a:80b1:99ad:85b1:7c08",
-    "https://2603:9001:ff00:3a:80b1:99ad:85b1:7c08",
+    o.strip()
+    for o in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        "http://localhost:8000",
+    ).split(",")
+    if o.strip()
 ]
 
 
@@ -169,18 +156,27 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = os.getenv("EMAIL_TLS")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_FROM")
 
-DEBUG = True
-ALLOWED_HOSTS = ["*"]  # Or your domain in production
+# Email
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() in ("true", "1", "yes")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@boundless.onl")
 
-CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+# Channel layer — use Redis when REDIS_URL is set, else in-memory for dev
+_redis_url = os.getenv("REDIS_URL")
+if _redis_url:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {"hosts": [_redis_url]},
+        }
+    }
+else:
+    CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 TAILWIND_APP_NAME = "theme"
 TAILWIND_CLI_COMMAND = "npm run build:tailwind"
