@@ -35,8 +35,8 @@
   <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap;">
     {% if user.id == user_profile.id %}
       <a href="{% url 'core:edit_profile' %}" class="btn btn-primary"><i class="fas fa-pen"></i> Edit Profile</a>
-      <a href="{% url 'core:friend_requests' %}" class="btn"><i class="fas fa-user-plus"></i> Friend Requests</a>
-      <a href="{% url 'core:friends_list' %}" class="btn"><i class="fas fa-users"></i> Friends</a>
+      <a href="{% url 'core:friend_requests' user_id=user.id %}" class="btn"><i class="fas fa-user-plus"></i> Friend Requests</a>
+      <a href="{% url 'core:friends_list' user_id=user.id %}" class="btn"><i class="fas fa-users"></i> Friends</a>
       <a href="{% url 'core:parental_controls' %}" class="btn"><i class="fas fa-shield-halved"></i> Parental Controls</a>
     {% else %}
       {% if user_profile not in user.friends.all %}
