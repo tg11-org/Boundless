@@ -12,10 +12,8 @@ db.sqlite3
 #media/
 staticfiles/
 
-# Migrations (optional)
+# Migration bytecode only
 */migrations/*.pyc
-*/migrations/*.py
-!*/migrations/__init__.py
 
 # Environment files
 .env
